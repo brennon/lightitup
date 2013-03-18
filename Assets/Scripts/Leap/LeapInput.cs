@@ -25,8 +25,9 @@ public static class LeapInput
 	public static bool EnableTranslation = true;
 	public static bool EnableRotation = true;
 	public static bool EnableScaling = false;
+	
 	/// <summary>
-	/// Delegates for the events to be dispatched.  
+	/// Delegates for the events to be dispatched. LeapUnityHandController implements these.
 	/// </summary>
 	public delegate void PointableFoundHandler( Pointable p );
 	public delegate void PointableUpdatedHandler( Pointable p );
@@ -49,17 +50,22 @@ public static class LeapInput
 	
 	public static Leap.Frame Frame
 	{
+		// This makes the private frame publicly accessible.
 		get { return m_Frame; }
 	}
 	
 	public static void Update() 
-	{	
+	{
+		// If there is a controller currently connected
 		if( m_controller != null )
 		{
-			
+			// If the frame null, set lastFrame to Frame.Invalid,
+			// otherwise set it to the current value of m_Frame.
 			Frame lastFrame = m_Frame == null ? Frame.Invalid : m_Frame;
+			// Get a Frame from the Controller:
 			m_Frame	= m_controller.Frame();
 			
+			// Process all events for the new Frame
 			DispatchLostEvents(Frame, lastFrame);
 			DispatchFoundEvents(Frame, lastFrame);
 			DispatchUpdatedEvents(Frame, lastFrame);
@@ -81,13 +87,21 @@ public static class LeapInput
 	
 	private static void DispatchLostEvents(Frame newFrame, Frame oldFrame)
 	{
+		// Iterate over hands in the previous frame
 		foreach( Hand h in oldFrame.Hands )
 		{
+			// If this hand in the previous frame was invalid, continue
+			// (A valid hand is one that contains valid tracking data)
 			if( !h.IsValid )
 				continue;
+			// If this hand in the previous frame was valid, but is now
+			// invalid, and if the HandLost event has a handler
 			if( !newFrame.Hand(h.Id).IsValid && HandLost != null )
+				// Fire the HandLost event for this hand
 				HandLost(h.Id);
 		}
+		// Do the same as above for pointables (Fingers and Tools)
+		// (Note that Hands are not Pointables)
 		foreach( Pointable p in oldFrame.Pointables )
 		{
 			if( !p.IsValid )
@@ -96,15 +110,23 @@ public static class LeapInput
 				PointableLost(p.Id);
 		}
 	}
+	
 	private static void DispatchFoundEvents(Frame newFrame, Frame oldFrame)
 	{
+		// Iterate over hands in the new frame
 		foreach( Hand h in newFrame.Hands )
 		{
+			// If the current hand is not valid, continue (fire no events)
 			if( !h.IsValid )
 				continue;
+			// If the current hand was not valid in the previous frame
+			// and if the HandLost event has a handler
 			if( !oldFrame.Hand(h.Id).IsValid && HandFound != null)
+				// Fire the HandFound event for this hand
 				HandFound(h);
 		}
+		// Do the same as above for pointables (Fingers and Tools)
+		// (Note that Hands are not Pointables)
 		foreach( Pointable p in newFrame.Pointables )
 		{
 			if( !p.IsValid )
@@ -113,15 +135,23 @@ public static class LeapInput
 				PointableFound(p);
 		}
 	}
+	
 	private static void DispatchUpdatedEvents(Frame newFrame, Frame oldFrame)
 	{
+		// For each Hand in the new Frame
 		foreach( Hand h in newFrame.Hands )
 		{
+			// Do nothing if the hand is invalid (fire no events)
 			if( !h.IsValid )
 				continue;
+			// If the hand was valid in the previous Frame and is _still_
+			// valid, and the HandUpdated event has a handler
 			if( oldFrame.Hand(h.Id).IsValid && HandUpdated != null)
+				// Fire the HandUpdated event for this Hand
 				HandUpdated(h);
 		}
+		// Do the same as above for pointables (Fingers and Tools)
+		// (Note that Hands are not Pointables)
 		foreach( Pointable p in newFrame.Pointables )
 		{
 			if( !p.IsValid )
