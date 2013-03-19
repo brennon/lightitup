@@ -12,8 +12,8 @@ using Leap;
 
 namespace Leap {
 	
-	//Extension to the unity vector class. Provides automatic scaling into unity scene space.
-	//Leap coordinates are in cm, so the .02f scaling factor means 1cm of hand motion = .02m scene motion
+	// Extension to the unity vector class. Provides automatic scaling into unity scene space.
+	// Leap coordinates are in cm, so the .02f scaling factor means 1cm of hand motion = .02m scene motion
 	public static class UnityVectorExtension
 	{
 		public static Vector3 InputScale = new Vector3(0.02f, 0.02f, 0.02f);
