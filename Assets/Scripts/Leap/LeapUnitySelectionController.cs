@@ -12,67 +12,103 @@ using System.Collections;
 using System.Collections.Generic;
 using Leap;
 
-//Contains all the logic for the focusing, selecting, highlighting, and moving of objects
-//based on leap input.  Depends on The LeapUnityHandController & the LeapFingerCollisionDispatcher
-//to move the hand representations around and detect collisions.  Highlighting is achieved by adding
-//an highlight material to the object, then manipulating it's color based on how close it is to being
-//selected.  Also depends on LeapInput & LeapInputUnityBridge. Currently just a prototype, it is 
-//disabled in the scene by default.
+// Contains all the logic for the focusing, selecting, highlighting, and moving of objects
+// based on Leap input.  Depends on The LeapUnityHandController & the LeapFingerCollisionDispatcher
+// to move the hand representations around and detect collisions.  Highlighting is achieved by adding
+// a highlight material to the object, then manipulating it's color based on how close it is to being
+// selected.  Also depends on LeapInput & LeapInputUnityBridge. Currently just a prototype, it is 
+// disabled in the scene by default.
 
 public class LeapUnitySelectionController : MonoBehaviour {
-
+	
+	// Get a reference to the LeapUnitySelectionController (this is available because the script
+	// is attached by default to the LeapController object in the scene.
 	public static LeapUnitySelectionController Get()
 	{
 		return (LeapUnitySelectionController)GameObject.FindObjectOfType(typeof(LeapUnitySelectionController));		
 	}
 	
+	
 	public virtual bool CheckEndSelection(Frame thisFrame)
 	{
+		// If nothing is touching the object, the selection should cease.
 		if( m_Touching.Count == 0 )
 			return true;
 		
+		// If the total time the object has been touched is longer than the minimum 
+		// duration for which an object must remain selected, and the object has not moved 
+		// for the minimum amount of time, the selection should cease.
 		if( Time.time - m_FirstTouchedTime > kMinSelectionTime + kSelectionTime && Time.time - m_LastMovedTime > kIdleStartDeselectTime+kSelectionTime )
 		{
 			return true;
 		}
 		
+		// If we reach this point, the object remains selected.
 		return false;
 	}
+	
 	public virtual bool CheckShouldMove(Frame thisFrame)
 	{
+		// Return true if translation is enabled and at least one 
+		// pointable is touching the object.
 		return LeapInput.EnableTranslation && m_Touching.Count >= 1;	
 	}
+	
 	public virtual bool CheckShouldRotate(Frame thisFrame)
 	{
+		// Return true if rotation is enabled and at least two 
+		// pointables are touching the object.
 		return LeapInput.EnableRotation && m_Touching.Count >= 2;
 	}
+	
 	public virtual bool CheckShouldScale(Frame thisFrame)
 	{
+		// Return true if scaling is enabled and at least two 
+		// pointables are touching the object.
 		return LeapInput.EnableScaling && m_Touching.Count >= 2;
 	}
+	
 	public virtual void DoMovement(Frame thisFrame)
 	{
+		// Initialize two empty vectors.
 		Vector3 currPositionSum = new Vector3(0,0,0);
 		Vector3 lastPositionSum = new Vector3(0,0,0);
-				
+		
+		// Iterate over all objects (fingers) touching the currently
+		// focused object.
 		foreach( GameObject obj in m_Touching )
 		{
+			// Add the transform for this finger to the 
+			// position sum vector.
 			currPositionSum += obj.transform.position;
 		}
+		
+		// Iterate of the positions of the fingers in the last frame.
 		foreach( Vector3 vec in m_LastPos )
 		{
+			// Sum each position with the last position vector.
 			lastPositionSum += vec;	
 		}
 		
+		// Add the difference between the current position and last position vectors
+		// (divided by the number of fingers touching the object) to the transform
+		// of the currently selected object.
 		m_FocusedObject.transform.position += (currPositionSum - lastPositionSum) / m_Touching.Count;
 	}
+	
 	public virtual void DoRotation(Frame thisFrame)
 	{
+		// Here we only work with the first two fingers touching the currently focused object.
+		// Subtract one from the other for their last positions.
 		Vector3 lastVec = m_LastPos[1] - m_LastPos[0];
+		// Do the same for their current positions.
 		Vector3 currVec = m_Touching[1].transform.position - m_Touching[0].transform.position;
+		// If these vectors are different:
 		if( lastVec != currVec )
 		{
+			// Take the cross product of these two vectors.
 			Vector3 axis = Vector3.Cross(currVec, lastVec);
+			// Calculate the rotation and apply to the focused object.
 			float lastDist = lastVec.magnitude;
 			float currDist = currVec.magnitude;
 			float axisDist = axis.magnitude;
@@ -80,6 +116,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 			m_FocusedObject.transform.RotateAround(axis/axisDist, angle);
 		}	
 	}
+	
 	public virtual void DoScaling(Frame thisFrame)
 	{
 		Vector3 lastVec = m_LastPos[1] - m_LastPos[0];
@@ -120,7 +157,8 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		
 		//Set selection after the time has elapsed
 		if( !m_Selected && m_FocusedObject && (Time.fixedTime - m_FirstTouchedTime) >= kSelectionTime )
-			m_Selected = true;
+			// m_Selected = true;
+			Select();
 		
 		//Update the focused object's color
 		float selectedT = m_FocusedObject != null ? (Time.time - m_FirstTouchedTime) / kSelectionTime : 0.0f;
@@ -239,6 +277,11 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		}
 	}
 	
+	public void Select ()
+	{
+		m_Selected = !m_Selected;
+	}
+	
 	void Start()
 	{
 		m_HighlightMaterial = Resources.Load("Materials/Highlight") as Material;
@@ -255,11 +298,11 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	protected float m_FirstTouchedTime = 0.0f;
 	protected float m_LastMovedTime = 0.0f;
 	
-	protected const float kSelectionTime = .25f;
-	protected const float kIdleStartDeselectTime = .5f;
-	protected const float kMinSelectionTime = 2.0f;
-	protected const float kMovementThreshold = 2.0f;
-	protected Color kBlankColor = new Color(0,0,0,0);
+	protected const float kSelectionTime = .25f;		// wait for how long until object is selected/deselected (transition time)
+	protected const float kIdleStartDeselectTime = 5f;	// how long does it have to be idle before starting deselection
+	protected const float kMinSelectionTime = 2.0f;		// minimum time an object can be selected
+	protected const float kMovementThreshold = 2.0f;	// minimum translation before it is considered idle (counting from m_LastMovedTime)
+	protected Color kBlankColor = new Color(1,0,0,1);	// color during selection/deselection period
 	
 	private Material m_HighlightMaterial = null;
 	
