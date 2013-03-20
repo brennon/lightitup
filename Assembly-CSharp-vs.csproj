@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{D079CCAC-712B-9C41-A534-D6F4E072B1FC}</ProjectGuid>
+	<ProjectGuid>{A1A92CC4-D75F-6621-09C9-C8A62155455B}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -37,10 +37,10 @@
     <Reference Include="System.XML" />
 	<Reference Include="System.Core" />
 	<Reference Include="UnityEngine">
-	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
 	</Reference>
 	<Reference Include="UnityEditor">
-	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll</HintPath>
+	  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
 	</Reference>
   </ItemGroup>
   <ItemGroup>
@@ -52,7 +52,7 @@
      <Compile Include="Assets\Scripts\Leap\LeapUnityExtensions.cs" />
      <Compile Include="Assets\Scripts\Leap\LeapUnityHandController.cs" />
      <Compile Include="Assets\Scripts\Leap\LeapUnitySelectionController.cs" />
- <Reference Include="Assets\LeapCSharp.NET3.5">
+ <Reference Include="LeapCSharp.NET3.5">
  <HintPath>Assets\LeapCSharp.NET3.5.dll</HintPath>
  </Reference>
   </ItemGroup>
