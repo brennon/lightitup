@@ -221,7 +221,7 @@ public class LeapUnityHandController : MonoBehaviour
 			float offsetX = Vector3.Angle(Vector3.right, vFingerDir);
 			float pitch = offsetY.ToUnityPitch();
 			float yaw = offsetX.ToUnityYaw();
-			Debug.Log ("Pitch: "+pitch+"  Yaw: "+yaw);
+//			Debug.Log ("Pitch: "+pitch+"  Yaw: "+yaw);
 		}
 	}
 	

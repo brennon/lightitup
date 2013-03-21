@@ -125,11 +125,10 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	{
 		// Here we only work with the first two fingers touching the currently focused object.
 		// Subtract one from the other for their last positions.
-//		Vector3 lastVec = m_LastPos[1] - m_LastPos[0];
-		Vector3 lastVec = m_LastPos[0];
+		Vector3 lastVec = m_LastPos[1] - m_LastPos[0];
 		// Do the same for their current positions.
-//		Vector3 currVec = m_Touching[1].transform.position - m_Touching[0].transform.position;
-		Vector3 currVec = m_Touching[0].transform.position;
+		Vector3 currVec = m_Touching[1].transform.position - m_Touching[0].transform.position;
+
 		Debug.Log(currVec);
 		// If these vectors are different:
 		if( lastVec != currVec )
@@ -137,18 +136,34 @@ public class LeapUnitySelectionController : MonoBehaviour {
 			// Take the cross product of these two vectors.
 			Vector3 axis = Vector3.Cross(currVec, lastVec);
 			// Calculate the rotation and apply to the focused object.
-//			float lastDist = lastVec.magnitude;
-//			float currDist = currVec.magnitude;
+			float lastDist = lastVec.magnitude;
+			float currDist = currVec.magnitude;
 			float axisDist = axis.magnitude;
-//			Debug.Log(axis +","+lastDist+","+currDist+","+ axisDist);
-//			float angle = -Mathf.Asin(axisDist / (lastDist*currDist));
-			float angle = -Mathf.Asin(axisDist);
-//			Debug.Log(angle);
+			float angle = -Mathf.Asin(axisDist / (lastDist*currDist));
+
 			m_FocusedObject.transform.RotateAround(axis/axisDist, angle);
 		}	
 	}
+
+		public virtual void DoScaling(Frame thisFrame)
+	{
+		Vector3 lastVec = m_LastPos[1] - m_LastPos[0];
+		Vector3 currVec = m_Touching[1].transform.position - m_Touching[0].transform.position;
+		if( lastVec != currVec )
+		{
+			float lastDist = lastVec.magnitude;
+			float currDist = currVec.magnitude;
+			Debug.Log (currDist);
+			//clamp the scale of the object so we don't shrink/grow too much
+			Vector3 scaleClamped = m_FocusedObject.transform.localScale * Mathf.Clamp((currDist/lastDist), .8f, 1.2f);
+			scaleClamped.x = Mathf.Clamp(scaleClamped.x, .3f, 5.0f);
+			scaleClamped.y = Mathf.Clamp(scaleClamped.y, .3f, 5.0f);
+			scaleClamped.z = Mathf.Clamp(scaleClamped.z, .3f, 5.0f);
+			m_FocusedObject.transform.localScale = scaleClamped;
+		}
+	}
 	
-	public virtual void DoScaling(Frame thisFrame)
+	public virtual void DoScaling_old(Frame thisFrame)
 	{
 		Vector3 lastVec = m_LastPos[1] - m_LastPos[0];
 		Vector3 currVec = m_Touching[1].transform.position - m_Touching[0].transform.position;
