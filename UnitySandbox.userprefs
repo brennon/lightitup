@@ -2,11 +2,11 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Leap/LeapUnitySelectionController.cs">
     <Files>
-      <File FileName="Assets/Scripts/Leap/LeapInput.cs" Line="154" Column="42" />
-      <File FileName="Assets/Scripts/Leap/LeapUnityHandController.cs" Line="28" Column="42" />
-      <File FileName="Assets/Scripts/Leap/LeapUnityBridge.cs" Line="199" Column="44" />
-      <File FileName="Assets/Scripts/Leap/LeapUnityExtensions.cs" Line="49" Column="45" />
-      <File FileName="Assets/Scripts/Leap/LeapUnitySelectionController.cs" Line="299" Column="53" />
+      <File FileName="Assets/Scripts/Leap/LeapInput.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Leap/LeapUnityHandController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Leap/LeapUnityBridge.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Leap/LeapUnityExtensions.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Leap/LeapUnitySelectionController.cs" Line="299" Column="41" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
