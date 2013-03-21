@@ -217,6 +217,11 @@ public class LeapUnityHandController : MonoBehaviour
 			// A Quaternion represents a rotation. For more information, see here:
 			// http://docs.unity3d.com/Documentation/ScriptReference/Quaternion.FromToRotation.html
 			fingerObject.transform.localRotation = Quaternion.FromToRotation( Vector3.forward, vFingerDir );
+			float offsetY = Vector3.Angle(Vector3.up, vFingerDir);
+			float offsetX = Vector3.Angle(Vector3.right, vFingerDir);
+			float pitch = offsetY.ToUnityPitch();
+			float yaw = offsetX.ToUnityYaw();
+			Debug.Log ("Pitch: "+pitch+"  Yaw: "+yaw);
 		}
 	}
 	
@@ -238,6 +243,11 @@ public class LeapUnityHandController : MonoBehaviour
 			// Update the transform of the palm to match the incoming palm position from 
 			// the Leap (after scaling/offsetting it in LeapUnityExtensions).
 			palmObject.transform.localPosition = leapHand.PalmPosition.ToUnityTranslated();
+			// NEW: updates the rotation of the palm based on the incoming palm rotation
+//			Debug.Log(leapHand.Direction.ToUnityRotated());
+//			Debug.Log(leapHand.Direction);
+			Vector3 vPalmDir = leapHand.Direction.ToUnity(); //leapHand.Direction.ToUnityRotated();
+			palmObject.transform.localRotation = Quaternion.FromToRotation( Vector3.forward, vPalmDir );
 		}
 	}	
 	

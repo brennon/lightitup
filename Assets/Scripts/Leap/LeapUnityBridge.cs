@@ -138,7 +138,7 @@ public class LeapUnityBridge : MonoBehaviour
 		behavior.m_fingers = new GameObject[10];
 		behavior.m_hands = new GameObject[3]; //extra 'invalid' hand for grouping purposes
 		
-		// Create a Material arrat for the materials used for the ahnds
+		// Create a Material array for the materials used for the hands
 		behavior.m_materials = new Material[] { m_PrimaryHandMaterial, m_SecondaryHandMaterial, m_UnknownHandMaterial };
 		
 		// Create each Hand and add it to the m_hands array

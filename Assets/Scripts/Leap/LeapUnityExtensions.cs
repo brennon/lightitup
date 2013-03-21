@@ -38,6 +38,17 @@ namespace Leap {
 			return Offset(Scaled(FlippedZ( lv )));
 		}
 		
+		// For Rotations: change the angle to lightstage value
+		public static float ToUnityPitch(this float a)
+		{
+			return a-45; //Quaternion.Euler(0,0,0);
+		}
+		
+		public static float ToUnityYaw(this float a)
+		{
+			return a-90; //Quaternion.Euler(0,0,0);
+		}
+		
 		// Change sign of z-axis.
 		private static Vector3 FlippedZ( Vector v ) { return new Vector3( v.x, v.y, -v.z ); }
 		
