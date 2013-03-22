@@ -100,11 +100,18 @@ public class LeapUnityBridge : MonoBehaviour
 		
 		// Check keyboard input to enable/disable different types of interaction
 		if( Input.GetKeyDown(KeyCode.T) )
+//			Debug.Log("Translation"+LeapInput.EnableTranslation);
+//			LeapInput.EnableRotation = false;
+//			LeapInput.EnableScaling = false;
 			LeapInput.EnableTranslation = !LeapInput.EnableTranslation;
 		if( Input.GetKeyDown(KeyCode.R) )
 			LeapInput.EnableRotation = !LeapInput.EnableRotation;
+//			LeapInput.EnableTranslation = false;
+//			LeapInput.EnableScaling = false;
 		if( Input.GetKeyDown(KeyCode.S) )
 			LeapInput.EnableScaling = !LeapInput.EnableScaling;
+//			LeapInput.EnableTranslation = false;
+//			LeapInput.EnableRotation = false;
 	}
 	
 	// Create the data structure that represents the user's hands

@@ -38,6 +38,8 @@ public class LeapUnityHandController : MonoBehaviour
 	private int[]					m_fingerIDs = null;
 	private int[]					m_handIDs	= null;
 	
+	private Dictionary<int, string> FingerTypes = new Dictionary<int, string>();
+	
 	// Enable/disable collisions for components.
 	void SetCollidable( GameObject obj, bool collidable )
 	{
@@ -113,6 +115,35 @@ public class LeapUnityHandController : MonoBehaviour
 		}
 	}
 	
+	void SetInteractionMode () {
+		if (FingerTypes.Count == 0)
+			print ("Nothing");
+		else if (FingerTypes.Count == 1) {
+			if (FingerTypes.ContainsValue("index"))
+				print ("Rotate");
+			else
+				print ("Nothing");
+		}
+		else {
+			if (FingerTypes.ContainsValue("thumb"))
+				print ("Scale");
+			else
+				print ("Translate");
+		}
+	}
+	
+	void EvaluateNewFinger (Pointable finger) {
+		Leap.Vector handCenter = finger.Hand.SphereCenter;
+		if (Math.Abs(handCenter.x - finger.TipPosition.x) < 40) {
+//			print ("This is the index: "+finger.Id);
+			FingerTypes.Add(finger.Id, "index");
+		}
+		else {
+//			print ("This is the thumb: "+finger.Id);
+			FingerTypes.Add(finger.Id, "thumb");
+		}
+	}
+	
 	// When an object is found, we find our first inactive game object, activate it, and assign it to the found id.
 	// When lost, we deactivate the object & set it's id to -1.
 	// When updated, load the new data.
@@ -131,10 +162,25 @@ public class LeapUnityHandController : MonoBehaviour
 	
 	void OnPointableFound( Pointable p )
 	{
+		
 		// Find the first instance of -1 in m_fingerIDs
 		// (the first unused index).
 		int index = Array.FindIndex(m_fingerIDs, id => id == -1);
-		
+		// Allow only two fingers to be visible
+		if (index <= 1) {
+			EvaluateNewFinger (p);
+			// if this is the second finger check which one it is: thumb or index
+			if (index == 1) {
+//				print (p.Id);
+			}
+			else {
+//				print (p.Id);
+			}
+			SetInteractionMode();
+		}
+		else {
+			return;
+		}
 		// If there is an available slot in the array:
 		if( index != -1 )
 		{
@@ -153,6 +199,8 @@ public class LeapUnityHandController : MonoBehaviour
 		// If it was found:
 		if( index != -1 )
 		{
+			FingerTypes.Remove(lostID);
+			SetInteractionMode();
 			// Change the state of the pointable to invalid.
 			updatePointable( Pointable.Invalid, m_fingers[index] );
 			// Free up the slot in m_fingerIDs by setting it to -1.

@@ -22,8 +22,8 @@ using Leap;
 /// </summary>
 public static class LeapInput 
 {	
-	public static bool EnableTranslation = true;
-	public static bool EnableRotation = true;
+	public static bool EnableTranslation = false;
+	public static bool EnableRotation = false;
 	public static bool EnableScaling = false;
 	
 	/// <summary>

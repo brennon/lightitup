@@ -153,12 +153,12 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		{
 			float lastDist = lastVec.magnitude;
 			float currDist = currVec.magnitude;
-			Debug.Log (currDist);
+			Debug.Log (lastDist+","+currDist/lastDist);
 			//clamp the scale of the object so we don't shrink/grow too much
 			Vector3 scaleClamped = m_FocusedObject.transform.localScale * Mathf.Clamp((currDist/lastDist), .8f, 1.2f);
-			scaleClamped.x = Mathf.Clamp(scaleClamped.x, .3f, 5.0f);
-			scaleClamped.y = Mathf.Clamp(scaleClamped.y, .3f, 5.0f);
-			scaleClamped.z = Mathf.Clamp(scaleClamped.z, .3f, 5.0f);
+			scaleClamped.x = Mathf.Clamp(scaleClamped.x, .7f, 3.0f);
+			scaleClamped.y = Mathf.Clamp(scaleClamped.y, .7f, 3.0f);
+			scaleClamped.z = Mathf.Clamp(scaleClamped.z, .7f, 3.0f);
 			m_FocusedObject.transform.localScale = scaleClamped;
 		}
 	}
