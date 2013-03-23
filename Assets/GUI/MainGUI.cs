@@ -3,14 +3,14 @@ using System.Collections;
 
 public class MainGUI : MonoBehaviour {
 	
-	public string idString = "Enter ID";
+	public string subjectID = "Enter ID";
+	public Rect subjectIDRect = new Rect();
 
 	void OnGUI () {
 		// Make a background box
 		// GUI.Box(new Rect(10,10,100,90), "Loader Menu");
 		
-		idString = GUI.TextArea(new Rect(100, 100, 200, 100), idString, 5);
-		Debug.Log(idString);
+		subjectID = GUI.TextArea(subjectIDRect, subjectID, 5);
 
 		// Make the first button. If it is pressed, Application.Loadlevel (1) will be executed
 		if(GUI.Button(new Rect(20,40,80,20), "Training")) {
