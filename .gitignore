@@ -16,7 +16,8 @@ Builds/*
 *.pidb
 *.userprefs
 *.swp
-
+*.csproj
+*.sln
 obj/
 *.svd
  
@@ -34,5 +35,6 @@ Assembly-CSharp-vs.csproj
 Assembly-UnityScript-firstpass.pidb
 Assembly-UnityScript-firstpass.unityproj
 Assembly-UnityScript-firstpass-vs.unityproj
+Assembly-*.*
 UnitySandbox.suo
 .DS_Store
