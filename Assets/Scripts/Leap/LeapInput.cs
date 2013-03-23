@@ -72,6 +72,19 @@ public static class LeapInput
 		}
 	}
 	
+	public static void EnableInteraction (string type) {
+		Debug.Log ("Action mode: " + type);
+		LeapInput.EnableRotation = false;
+		LeapInput.EnableTranslation = false;
+		LeapInput.EnableScaling = false;
+		if (type == "Rotate")
+			LeapInput.EnableRotation = true;
+		else if (type == "Translate")
+			LeapInput.EnableTranslation = true;
+		else if (type == "Scale")
+			LeapInput.EnableScaling = true;
+	}
+	
 	//*********************************************************************
 	// Private data & functions
 	//*********************************************************************

@@ -115,23 +115,25 @@ public class LeapUnityHandController : MonoBehaviour
 		}
 	}
 	
+	// Decides the interaction mode based on the visible fingers
 	void SetInteractionMode () {
 		if (FingerTypes.Count == 0)
 			print ("Nothing");
 		else if (FingerTypes.Count == 1) {
-			if (FingerTypes.ContainsValue("index"))
-				print ("Rotate");
+			if (FingerTypes.ContainsValue("index"))	// two non-thumg fingers (index) -> Rotation
+				LeapInput.EnableInteraction("Rotate");
 			else
-				print ("Nothing");
+				LeapInput.EnableInteraction("Nothing");
 		}
 		else {
-			if (FingerTypes.ContainsValue("thumb"))
-				print ("Scale");
+			if (FingerTypes.ContainsValue("thumb")) // if one out of two is a thumb -> Scaling
+				LeapInput.EnableInteraction("Scale");
 			else
-				print ("Translate");
+				LeapInput.EnableInteraction("Translate"); // just one non-thumb (index) -> Translate
 		}
 	}
 	
+	// Evaluates the visible fingers and adds them in the FingerTypes dictionary (<int id>: <string type>)
 	void EvaluateNewFinger (Pointable finger) {
 		Leap.Vector handCenter = finger.Hand.SphereCenter;
 		if (Math.Abs(handCenter.x - finger.TipPosition.x) < 40) {
@@ -142,6 +144,14 @@ public class LeapUnityHandController : MonoBehaviour
 //			print ("This is the thumb: "+finger.Id);
 			FingerTypes.Add(finger.Id, "thumb");
 		}
+	}
+	
+	public GameObject GetSecondFinger (GameObject firstFing) {
+		foreach (GameObject f in m_fingers)
+			if (f != firstFing)
+//				Debug.Log ("FOUND "+f.transform.Find("Tip").gameObject);
+				return f.transform.Find("Tip").gameObject;
+		return firstFing;
 	}
 	
 	// When an object is found, we find our first inactive game object, activate it, and assign it to the found id.
@@ -167,15 +177,10 @@ public class LeapUnityHandController : MonoBehaviour
 		// (the first unused index).
 		int index = Array.FindIndex(m_fingerIDs, id => id == -1);
 		// Allow only two fingers to be visible
+		// if this is there are less than 2 fingers check which type is the new: thumb or index	
 		if (index <= 1) {
 			EvaluateNewFinger (p);
-			// if this is the second finger check which one it is: thumb or index
-			if (index == 1) {
-//				print (p.Id);
-			}
-			else {
-//				print (p.Id);
-			}
+			// and change the interaciton mode accordingly
 			SetInteractionMode();
 		}
 		else {
@@ -199,6 +204,7 @@ public class LeapUnityHandController : MonoBehaviour
 		// If it was found:
 		if( index != -1 )
 		{
+			// Remove the lost finger from the dicitonary and update the interaction mode
 			FingerTypes.Remove(lostID);
 			SetInteractionMode();
 			// Change the state of the pointable to invalid.
@@ -265,11 +271,14 @@ public class LeapUnityHandController : MonoBehaviour
 			// A Quaternion represents a rotation. For more information, see here:
 			// http://docs.unity3d.com/Documentation/ScriptReference/Quaternion.FromToRotation.html
 			fingerObject.transform.localRotation = Quaternion.FromToRotation( Vector3.forward, vFingerDir );
-			float offsetY = Vector3.Angle(Vector3.up, vFingerDir);
-			float offsetX = Vector3.Angle(Vector3.right, vFingerDir);
-			float pitch = offsetY.ToUnityPitch();
-			float yaw = offsetX.ToUnityYaw();
-//			Debug.Log ("Pitch: "+pitch+"  Yaw: "+yaw);
+			// LIU: get the offset from the forward (pitch) and right (yaw) vectors
+			if (LeapUnitySelectionController.ActiveMode == "Rotating") {
+				float offsetY = Vector3.Angle(Vector3.up, vFingerDir);
+				float offsetX = Vector3.Angle(Vector3.right, vFingerDir);
+				float pitch = offsetY.ToUnityPitch();
+				float yaw = offsetX.ToUnityYaw();
+				Debug.Log ("Pitch: "+pitch+"  Yaw: "+yaw);
+			}
 		}
 	}
 	

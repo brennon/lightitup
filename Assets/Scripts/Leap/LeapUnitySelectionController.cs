@@ -22,7 +22,7 @@ using Leap;
 public class LeapUnitySelectionController : MonoBehaviour {
 	
 	// Get a reference to the LeapUnitySelectionController (this is available because the script
-	// is attached by default to the LeapController object in the scene.
+	// is attached by default to the LeapController object in the scene).
 	public static LeapUnitySelectionController Get()
 	{
 		return (LeapUnitySelectionController)GameObject.FindObjectOfType(typeof(LeapUnitySelectionController));		
@@ -56,20 +56,23 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	
 	public virtual bool CheckShouldRotate(Frame thisFrame)
 	{
-		// Return true if rotation is enabled and at least two 
-		// pointables are touching the object.
+		// Return true if rotation is enabled and only one 
+		// pointable is touching the object.
 		return LeapInput.EnableRotation && m_Touching.Count == 1;
 	}
 	
 	public virtual bool CheckShouldScale(Frame thisFrame)
 	{
-		// Return true if scaling is enabled and at least two 
-		// pointables are touching the object.
-		return LeapInput.EnableScaling && m_Touching.Count >= 2;
+		// Return true if scaling is enabled and at least one 
+		// pointable is touching the object.
+		return LeapInput.EnableScaling && m_Touching.Count >= 1;
 	}
 	
 	public virtual void DoMovement(Frame thisFrame)
 	{
+		// Set the mode if not previously set
+		if (ActiveMode != "Moving")
+			ActiveMode = "Moving";
 		// Initialize two empty vectors.
 		Vector3 currPositionSum = new Vector3(0,0,0);
 		Vector3 lastPositionSum = new Vector3(0,0,0);
@@ -96,29 +99,12 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		m_FocusedObject.transform.position += (currPositionSum - lastPositionSum) / m_Touching.Count;
 	}
 
-	public virtual void DoRotation(Frame thisFrame)
+	public static void DoRotation(Frame thisFrame)
 	{
-		// Here we only work with the first two fingers touching the currently focused object.
-		// Subtract one from the other for their last positions.
-		Vector3 lastVec = m_LastPos[0];
-		// Do the same for their current positions.
+		// Set the mode if not previously set
+		if (ActiveMode != "Rotating")
+			ActiveMode = "Rotating";
 
-		Vector3 currVec = m_Touching[0].transform.position;
-//		Debug.Log(currVec);
-		// If these vectors are different:
-//		if( lastVec != currVec )
-//		{
-//			// Take the cross product of these two vectors.
-//			Vector3 axis = Vector3.Cross(currVec, lastVec);
-//			// Calculate the rotation and apply to the focused object.
-//
-//			float axisDist = axis.magnitude;
-////			Debug.Log(axis +","+lastDist+","+currDist+","+ axisDist);
-//
-//			float angle = -Mathf.Asin(axisDist);
-////			Debug.Log(angle);
-//			m_FocusedObject.transform.RotateAround(axis/axisDist, angle);
-//		}	
 	}
 	
 	public virtual void DoRotation_Old(Frame thisFrame)
@@ -147,13 +133,16 @@ public class LeapUnitySelectionController : MonoBehaviour {
 
 		public virtual void DoScaling(Frame thisFrame)
 	{
+		// Set the mode if not previously set
+		if (ActiveMode != "Scaling")
+			ActiveMode = "Scaling";
 		Vector3 lastVec = m_LastPos[1] - m_LastPos[0];
 		Vector3 currVec = m_Touching[1].transform.position - m_Touching[0].transform.position;
 		if( lastVec != currVec )
 		{
 			float lastDist = lastVec.magnitude;
 			float currDist = currVec.magnitude;
-			Debug.Log (lastDist+","+currDist/lastDist);
+//			Debug.Log (lastDist+","+currDist/lastDist);
 			//clamp the scale of the object so we don't shrink/grow too much
 			Vector3 scaleClamped = m_FocusedObject.transform.localScale * Mathf.Clamp((currDist/lastDist), .8f, 1.2f);
 			scaleClamped.x = Mathf.Clamp(scaleClamped.x, .7f, 3.0f);
@@ -222,6 +211,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 			//End selection if we don't see any fingers or the scaling factor is going down quickly ( indicating we are making a fist )
 			if( CheckEndSelection(thisFrame) )
 			{
+				ActiveMode = "";
 				ClearFocus();
 			}
 			else
@@ -262,6 +252,12 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		{
 			m_Touching.Add(finger);
 			m_LastPos.Add(finger.transform.position);
+			// get the second fingertip gameobject
+			GameObject fingerObj = finger.transform.parent.gameObject;
+			GameObject secFingTip = GameObject.Find("Leap Hands").GetComponent<LeapUnityHandController>().GetSecondFinger(fingerObj);
+			m_Touching.Add(secFingTip);
+			m_LastPos.Add(secFingTip.transform.position);
+		Debug.Log ("Fingers touching: "+m_Touching.Count);
 		}
 	}
 	
@@ -352,6 +348,6 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	
 	private Material m_HighlightMaterial = null;
 	
-	
-	
+	// LIU: interaction mode active depending if the light is being touched
+	public static string ActiveMode;
 }
