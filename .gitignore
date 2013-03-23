@@ -1,6 +1,7 @@
 Temp/*
 Library/*
 Build/*
+Builds/*
 !Library/*.asset
 !Library/AssetImportState
 !Library/AssetVersioning.db
