@@ -20,8 +20,6 @@ Builds/*
 *.sln
 obj/
 *.svd
- 
- 
 UnitySandbox.userprefs
 Assembly-CSharp.csproj
 Assembly-CSharp.pidb
