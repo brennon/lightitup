@@ -181,6 +181,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		{
 			m_Touching.RemoveAt(index);
 			m_LastPos.RemoveAt(index);
+			print ("Touching: "+m_Touching.Count+"  pos: "+m_LastPos.Count+" MODE: "+ActiveMode);
 		}
 		
 		if( m_LastFrame != null && thisFrame != null && m_Selected)
@@ -250,14 +251,18 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		
 		if( !m_Touching.Contains(finger) )
 		{
+			m_Touching.Clear();	// LIU: Clear the touching fingers
+			m_LastPos.Clear();	// LIU: Clear their previous positions
 			m_Touching.Add(finger);
 			m_LastPos.Add(finger.transform.position);
 			// get the second fingertip gameobject
 			GameObject fingerObj = finger.transform.parent.gameObject;
-			GameObject secFingTip = GameObject.Find("Leap Hands").GetComponent<LeapUnityHandController>().GetSecondFinger(fingerObj);
+			GameObject secFingTip = GameObject.Find("Leap Hands").GetComponent<LeapUnityHandController>().GetSecondFinger(finger);
+			if (finger == secFingTip)
+				print ("THIS IS THE SAME FINGER");
 			m_Touching.Add(secFingTip);
 			m_LastPos.Add(secFingTip.transform.position);
-		Debug.Log ("Fingers touching: "+m_Touching.Count);
+			Debug.Log ("Fingers touching: "+m_Touching.Count);
 		}
 	}
 	

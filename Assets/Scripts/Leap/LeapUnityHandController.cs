@@ -136,7 +136,7 @@ public class LeapUnityHandController : MonoBehaviour
 	// Evaluates the visible fingers and adds them in the FingerTypes dictionary (<int id>: <string type>)
 	void EvaluateNewFinger (Pointable finger) {
 		Leap.Vector handCenter = finger.Hand.SphereCenter;
-		if (Math.Abs(handCenter.x - finger.TipPosition.x) < 40) {
+		if (Math.Abs(handCenter.x - finger.TipPosition.x) < 30 && Math.Abs(handCenter.z - finger.TipPosition.z) > 20) {
 //			print ("This is the index: "+finger.Id);
 			FingerTypes.Add(finger.Id, "index");
 		}
@@ -147,10 +147,16 @@ public class LeapUnityHandController : MonoBehaviour
 	}
 	
 	public GameObject GetSecondFinger (GameObject firstFing) {
-		foreach (GameObject f in m_fingers)
-			if (f != firstFing)
-//				Debug.Log ("FOUND "+f.transform.Find("Tip").gameObject);
+		int i = 0;
+		foreach (GameObject f in m_fingers) {
+			Transform tip = f.transform.Find("Tip");
+			if (tip != firstFing.transform) {
+//				print ("RETURN SAME");
+				Debug.Log ("FOUND Tip No "+i+" : "+f.transform.Find("Tip").gameObject);
 				return f.transform.Find("Tip").gameObject;
+			i += 1;
+			}
+		}
 		return firstFing;
 	}
 	
@@ -277,7 +283,7 @@ public class LeapUnityHandController : MonoBehaviour
 				float offsetX = Vector3.Angle(Vector3.right, vFingerDir);
 				float pitch = offsetY.ToUnityPitch();
 				float yaw = offsetX.ToUnityYaw();
-				Debug.Log ("Pitch: "+pitch+"  Yaw: "+yaw);
+//				Debug.Log ("Pitch: "+pitch+"  Yaw: "+yaw);
 			}
 		}
 	}
