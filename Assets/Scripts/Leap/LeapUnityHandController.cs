@@ -37,9 +37,10 @@ public class LeapUnityHandController : MonoBehaviour
 	// corresponding gameobject invisible & set the id to -1.
 	private int[]					m_fingerIDs = null;
 	private int[]					m_handIDs	= null;
-	
+		
 	private Dictionary<int, string> FingerTypes = new Dictionary<int, string>();
-	
+	public static Pointable point;
+		
 	// Enable/disable collisions for components.
 	void SetCollidable( GameObject obj, bool collidable )
 	{
@@ -265,6 +266,7 @@ public class LeapUnityHandController : MonoBehaviour
 		// If the parent hand is valid:
 		if ( pointable.IsValid )
 		{
+			point = pointable;
 			// Create vectors for the finger's direction and position with the new 
 			// direction and position from the Leap, but only after scaling/ofsetting 
 			// with LeapUnityExtensions.
@@ -278,13 +280,18 @@ public class LeapUnityHandController : MonoBehaviour
 			// http://docs.unity3d.com/Documentation/ScriptReference/Quaternion.FromToRotation.html
 			fingerObject.transform.localRotation = Quaternion.FromToRotation( Vector3.forward, vFingerDir );
 			// LIU: get the offset from the forward (pitch) and right (yaw) vectors
-			if (LeapUnitySelectionController.ActiveMode == "Rotating") {
-				float offsetY = Vector3.Angle(Vector3.up, vFingerDir);
-				float offsetX = Vector3.Angle(Vector3.right, vFingerDir);
-				float pitch = offsetY.ToUnityPitch();
-				float yaw = offsetX.ToUnityYaw();
+//			if (LeapUnitySelectionController.ActiveMode == "Rotating") {
+//				float offsetY = Vector3.Angle(Vector3.up, vFingerDir);
+//				float offsetX = Vector3.Angle(Vector3.right, vFingerDir);
+//				float pitch = offsetY.ToUnityPitch();
+//				float yaw = offsetX.ToUnityYaw();
+				//fingerObject.GetComponent<SpotLight1>().OnLeapRotation(pitch, yaw);
 //				Debug.Log ("Pitch: "+pitch+"  Yaw: "+yaw);
-			}
+//				Vector2 rotation = new Vector2 (pitch,yaw);
+//				LeapUnitySelectionController.DoRotation(rotation);
+				//fingerObject.transform.RotateAroundLocal(new Vector3(0,1,0),yaw);
+				//fingerObject.gameObject.SendMessage(OnLeapRotation, yaw,SendMessageOptions.DontRequireReceiver);
+//			}
 		}
 	}
 	

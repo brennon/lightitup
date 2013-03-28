@@ -99,15 +99,25 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		m_FocusedObject.transform.position += (currPositionSum - lastPositionSum) / m_Touching.Count;
 	}
 
-	public static void DoRotation(Frame thisFrame)
+	public virtual void DoRotation(Frame thisFrame)
 	{
 		// Set the mode if not previously set
-		if (ActiveMode != "Rotating")
+		if (ActiveMode != "Rotating") {
 			ActiveMode = "Rotating";
-
+		}
+		
+		Vector3 vFingerDir = LeapUnityHandController.point.Direction.ToUnity();
+//		Vector3 vFingerPos = LeapUnityHandController.point.TipPosition.ToUnityTranslated();
+		float offsetY = Vector3.Angle(Vector3.up, vFingerDir);
+		float offsetX = Vector3.Angle(Vector3.right, vFingerDir);
+		float pitch = offsetY.ToUnityPitch();
+		float yaw = offsetX.ToUnityYaw();
+		Vector2 rotation = new Vector2 (pitch,yaw);
+		print ("Rotating by: "+rotation);
+		m_FocusedObject.transform.RotateAroundLocal(new Vector3(0,1,0),yaw);
 	}
 	
-	public virtual void DoRotation_Old(Frame thisFrame)
+	public virtual void DoRotation_old(Frame thisFrame)
 	{
 		// Here we only work with the first two fingers touching the currently focused object.
 		// Subtract one from the other for their last positions.
@@ -131,7 +141,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		}	
 	}
 
-		public virtual void DoScaling(Frame thisFrame)
+	public virtual void DoScaling(Frame thisFrame)
 	{
 		// Set the mode if not previously set
 		if (ActiveMode != "Scaling")
@@ -142,12 +152,15 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		{
 			float lastDist = lastVec.magnitude;
 			float currDist = currVec.magnitude;
-//			Debug.Log (lastDist+","+currDist/lastDist);
 			//clamp the scale of the object so we don't shrink/grow too much
-			Vector3 scaleClamped = m_FocusedObject.transform.localScale * Mathf.Clamp((currDist/lastDist), .8f, 1.2f);
-			scaleClamped.x = Mathf.Clamp(scaleClamped.x, .7f, 3.0f);
-			scaleClamped.y = Mathf.Clamp(scaleClamped.y, .7f, 3.0f);
-			scaleClamped.z = Mathf.Clamp(scaleClamped.z, .7f, 3.0f);
+//			Vector3 scaleClamped = m_FocusedObject.transform.localScale * Mathf.Clamp((currDist/lastDist), .1f, .2f);
+//			Debug.Log (lastDist+","+(currDist-lastDist)+" SCALE: "+scaleClamped);
+//			scaleClamped.x = Mathf.Clamp(scaleClamped.x, .7f, 3.0f);
+//			scaleClamped.y = Mathf.Clamp(scaleClamped.y, .7f, 3.0f);
+//			scaleClamped.z = Mathf.Clamp(scaleClamped.z, .7f, 3.0f);
+//			print ("Scaling factor: "+scaleClamped);
+			float scale = Mathf.Clamp((currDist-lastDist)*2, -.1f, .1f);
+			m_FocusedObject.SendMessage("OnIntensity", scale, SendMessageOptions.DontRequireReceiver);
 //			m_FocusedObject.transform.localScale = scaleClamped;
 		}
 	}
@@ -256,7 +269,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 			m_Touching.Add(finger);
 			m_LastPos.Add(finger.transform.position);
 			// get the second fingertip gameobject
-			GameObject fingerObj = finger.transform.parent.gameObject;
+//			GameObject fingerObj = finger.transform.parent.gameObject;
 			GameObject secFingTip = GameObject.Find("Leap Hands").GetComponent<LeapUnityHandController>().GetSecondFinger(finger);
 			if (finger == secFingTip)
 				print ("THIS IS THE SAME FINGER");
