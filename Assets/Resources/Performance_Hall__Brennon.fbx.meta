@@ -1,0 +1,131 @@
+fileFormatVersion: 2
+guid: 671650951860115478eb82cebb625e59
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: BackWall
+    100002: Big_Box
+    100004: Blades
+    100006: block
+    100008: Bottom_Floor
+    100010: Cylinders
+    100012: Guard_Rails
+    100014: Hangy_Things
+    100016: Lower_Boxes
+    100018: //RootNode
+    100020: SideWalls
+    100022: Strips
+    100024: Texture Group
+    100026: Top
+    100028: TopFloor
+    100030: Upper_Balconies
+    400000: BackWall
+    400002: Big_Box
+    400004: Blades
+    400006: block
+    400008: Bottom_Floor
+    400010: Cylinders
+    400012: Guard_Rails
+    400014: Hangy_Things
+    400016: Lower_Boxes
+    400018: //RootNode
+    400020: SideWalls
+    400022: Strips
+    400024: Texture Group
+    400026: Top
+    400028: TopFloor
+    400030: Upper_Balconies
+    2300000: BackWall
+    2300002: Big_Box
+    2300004: Blades
+    2300006: block
+    2300008: Bottom_Floor
+    2300010: Cylinders
+    2300012: Guard_Rails
+    2300014: Hangy_Things
+    2300016: Lower_Boxes
+    2300018: SideWalls
+    2300020: Strips
+    2300022: Top
+    2300024: TopFloor
+    2300026: Upper_Balconies
+    3300000: BackWall
+    3300002: Big_Box
+    3300004: Blades
+    3300006: block
+    3300008: Bottom_Floor
+    3300010: Cylinders
+    3300012: Guard_Rails
+    3300014: Hangy_Things
+    3300016: Lower_Boxes
+    3300018: SideWalls
+    3300020: Strips
+    3300022: Top
+    3300024: TopFloor
+    3300026: Upper_Balconies
+    4300000: Top
+    4300002: Big_Box
+    4300004: Upper_Balconies
+    4300006: BackWall
+    4300008: SideWalls
+    4300010: Strips
+    4300012: Hangy_Things
+    4300014: TopFloor
+    4300016: Blades
+    4300018: Cylinders
+    4300020: Lower_Boxes
+    4300022: Bottom_Floor
+    4300024: Guard_Rails
+    4300026: block
+    7400000: modo_Anim
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 2
+    materialSearch: 2
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: .00100000005
+    meshCompression: 0
+    addColliders: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    handles: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  additionalBone: 1
+  animationType: 2
+  userData: 

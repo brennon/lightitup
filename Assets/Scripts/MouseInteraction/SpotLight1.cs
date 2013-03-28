@@ -7,7 +7,7 @@ public class SpotLight1 : MonoBehaviour {
 	public bool selected = false;
 	public int  mode = 0;
 	
-	private float translation_factor =100.0f;
+	private float translation_factor =20.0f;
 	private float rotation_factor = 2.0f;
 	private int beam_id = 0;
 	private GameObject  occlisionObj;
@@ -122,9 +122,9 @@ public class SpotLight1 : MonoBehaviour {
 				beam_id = 9;
 			
 			else if(collision.gameObject.name=="struss-one" || collision.gameObject.name=="struss-two" || collision.gameObject.name=="struss-three" ||collision.gameObject.name=="struss-seven") 
-				transform.eulerAngles = new Vector3(270, 180, 0);
-			else if(collision.gameObject.name=="struss-four" || collision.gameObject.name=="struss-five" || collision.gameObject.name=="struss-six"||collision.gameObject.name=="struss-eight")
 				transform.eulerAngles = new Vector3(90, 0, 0);
+			else if(collision.gameObject.name=="struss-four" || collision.gameObject.name=="struss-five" || collision.gameObject.name=="struss-six"||collision.gameObject.name=="struss-eight")
+				transform.eulerAngles = new Vector3(270, 180, 0);
 			else if (collision.gameObject.name=="struss-nine")
 				transform.eulerAngles = new Vector3(0, 90, 90);			
 			else beam_id = -1;

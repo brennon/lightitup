@@ -148,7 +148,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 			scaleClamped.x = Mathf.Clamp(scaleClamped.x, .7f, 3.0f);
 			scaleClamped.y = Mathf.Clamp(scaleClamped.y, .7f, 3.0f);
 			scaleClamped.z = Mathf.Clamp(scaleClamped.z, .7f, 3.0f);
-			m_FocusedObject.transform.localScale = scaleClamped;
+//			m_FocusedObject.transform.localScale = scaleClamped;
 		}
 	}
 	

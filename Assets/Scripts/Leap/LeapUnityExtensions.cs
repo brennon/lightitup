@@ -17,7 +17,7 @@ namespace Leap {
 	public static class UnityVectorExtension
 	{
 		// Change scale and offset here, if desired.
-		public static Vector3 InputScale = new Vector3(0.02f, 0.02f, 0.02f);
+		public static Vector3 InputScale = new Vector3(0.1f, 0.1f, 0.1f);
 		public static Vector3 InputOffset = new Vector3(0,0,0);
 		
 		// For Directions
