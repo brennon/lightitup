@@ -137,7 +137,7 @@ public class LeapUnityHandController : MonoBehaviour
 	// Evaluates the visible fingers and adds them in the FingerTypes dictionary (<int id>: <string type>)
 	void EvaluateNewFinger (Pointable finger) {
 		Leap.Vector handCenter = finger.Hand.SphereCenter;
-		if (Math.Abs(handCenter.x - finger.TipPosition.x) < 30 && Math.Abs(handCenter.z - finger.TipPosition.z) > 20) {
+		if (Math.Abs(handCenter.x - finger.TipPosition.x) < 40 && Math.Abs(handCenter.z - finger.TipPosition.z) > 15) {
 //			print ("This is the index: "+finger.Id);
 			FingerTypes.Add(finger.Id, "index");
 		}
@@ -148,17 +148,22 @@ public class LeapUnityHandController : MonoBehaviour
 	}
 	
 	public GameObject GetSecondFinger (GameObject firstFing) {
-		int i = 0;
-		foreach (GameObject f in m_fingers) {
-			Transform tip = f.transform.Find("Tip");
-			if (tip != firstFing.transform) {
-//				print ("RETURN SAME");
-				Debug.Log ("FOUND Tip No "+i+" : "+f.transform.Find("Tip").gameObject);
-				return f.transform.Find("Tip").gameObject;
-			i += 1;
-			}
+		// find if there is more than one finger in the finger's list
+		int index = Array.FindIndex(m_fingerIDs, id => id == -1);
+		// only the second position is empty => there is only one finger
+		if (index == 1) {
+			return firstFing;
 		}
-		return firstFing;
+		else {
+			foreach (GameObject f in m_fingers) {
+				Transform tip = f.transform.Find("Tip");
+				if (tip != firstFing.transform) {
+//					Debug.Log ("FOUND Tip No "+i+" : "+f.transform.Find("Tip").gameObject);
+					return f.transform.Find("Tip").gameObject;
+				}
+			}
+			return firstFing;
+		}	
 	}
 	
 	// When an object is found, we find our first inactive game object, activate it, and assign it to the found id.

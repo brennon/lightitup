@@ -113,8 +113,8 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		float pitch = offsetY.ToUnityPitch();
 		float yaw = offsetX.ToUnityYaw();
 		Vector2 rotation = new Vector2 (pitch,yaw);
-		print ("Rotating by: "+rotation);
-		m_FocusedObject.transform.RotateAroundLocal(new Vector3(0,1,0),yaw);
+//		print ("Rotating by: "+rotation);
+//		m_FocusedObject.transform.RotateAroundLocal(new Vector3(0,1,0),yaw);
 	}
 	
 	public virtual void DoRotation_old(Frame thisFrame)
@@ -152,16 +152,8 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		{
 			float lastDist = lastVec.magnitude;
 			float currDist = currVec.magnitude;
-			//clamp the scale of the object so we don't shrink/grow too much
-//			Vector3 scaleClamped = m_FocusedObject.transform.localScale * Mathf.Clamp((currDist/lastDist), .1f, .2f);
-//			Debug.Log (lastDist+","+(currDist-lastDist)+" SCALE: "+scaleClamped);
-//			scaleClamped.x = Mathf.Clamp(scaleClamped.x, .7f, 3.0f);
-//			scaleClamped.y = Mathf.Clamp(scaleClamped.y, .7f, 3.0f);
-//			scaleClamped.z = Mathf.Clamp(scaleClamped.z, .7f, 3.0f);
-//			print ("Scaling factor: "+scaleClamped);
 			float scale = Mathf.Clamp((currDist-lastDist)*2, -.1f, .1f);
 			m_FocusedObject.SendMessage("OnIntensity", scale, SendMessageOptions.DontRequireReceiver);
-//			m_FocusedObject.transform.localScale = scaleClamped;
 		}
 	}
 	
@@ -217,7 +209,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		{
 			selectedT = 1.3f - (((Time.time - m_LastMovedTime) - kIdleStartDeselectTime) / kSelectionTime);
 		}
-		SetHighlightColor( Color.Lerp(kBlankColor, m_HighlightMaterial.color, selectedT) );
+//		SetHighlightColor( Color.Lerp(kBlankColor, m_HighlightMaterial.color, selectedT) );
 		
 		//Process the movement of the selected object.
 		if( m_Selected && thisFrame != m_LastFrame )
@@ -275,7 +267,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 				print ("THIS IS THE SAME FINGER");
 			m_Touching.Add(secFingTip);
 			m_LastPos.Add(secFingTip.transform.position);
-			Debug.Log ("Fingers touching: "+m_Touching.Count);
+//			Debug.Log ("Fingers touching: "+m_Touching.Count);
 		}
 	}
 	
@@ -299,11 +291,12 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	{
 		if( m_FocusedObject != null )
 		{
-			List<Material> materials = new List<Material>( m_FocusedObject.renderer.materials );
-			Material removeMaterial = materials.Find( m => m.name == m_HighlightMaterial.name + " (Instance)" );
-			materials.Remove(removeMaterial);
-			m_FocusedObject.renderer.materials = materials.ToArray();
-			Destroy(removeMaterial); //cleanup instanced material;
+			m_FocusedObject.SendMessage("OnMouseSelected", false, SendMessageOptions.DontRequireReceiver);
+//			List<Material> materials = new List<Material>( m_FocusedObject.renderer.materials );
+//			Material removeMaterial = materials.Find( m => m.name == m_HighlightMaterial.name + " (Instance)" );
+//			materials.Remove(removeMaterial);
+//			m_FocusedObject.renderer.materials = materials.ToArray();
+//			Destroy(removeMaterial); //cleanup instanced material;
 		}
 		m_FocusedObject = null;
 		m_FirstTouchedTime = 0.0f;
@@ -319,21 +312,23 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		m_FirstTouchedTime = Time.time;
 		m_LastMovedTime = Time.time + kMinSelectionTime;
 		//Add the new material, but set it as blank so it doesn't really show up.
-		List<Material> materials = new List<Material>( focus.renderer.materials );
-		Material newMaterial = new Material(m_HighlightMaterial);
-		newMaterial.color = new Color(0,0,0,0);
-		materials.Add(newMaterial);
-		focus.renderer.materials = materials.ToArray();
+//		List<Material> materials = new List<Material>( focus.renderer.materials );
+//		Material newMaterial = new Material(m_HighlightMaterial);
+//		newMaterial.color = new Color(0,0,0,0);
+//		materials.Add(newMaterial);
+//		focus.renderer.materials = materials.ToArray();
+		focus.SendMessage("OnMouseSelected", true, SendMessageOptions.DontRequireReceiver);
 	}
 	
 	public void SetHighlightColor(Color c)
 	{
 		if( m_FocusedObject == true )
 		{
-			Material[] materials = m_FocusedObject.renderer.materials;
-			Material changeMat = Array.Find(materials, m => m.name == m_HighlightMaterial.name + " (Instance)" );
-			changeMat.color = c;
-			m_FocusedObject.renderer.materials = materials;
+			print ("FOCUSED");
+//			Material[] materials = m_FocusedObject.renderer.materials;
+//			Material changeMat = Array.Find(materials, m => m.name == m_HighlightMaterial.name + " (Instance)" );
+//			changeMat.color = c;
+//			m_FocusedObject.renderer.materials = materials;
 		}
 	}
 	
