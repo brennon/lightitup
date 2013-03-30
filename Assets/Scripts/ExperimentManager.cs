@@ -27,7 +27,6 @@ public class ExperimentManager : MonoBehaviour {
                 Debug.Log ("Could not locate an ExperimentManager object. \n ExperimentManager was Generated Automatically.");
 				DontDestroyOnLoad(s_Instance);
             }
- 
             return s_Instance;
         }
     }
