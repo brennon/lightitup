@@ -19,10 +19,18 @@ public class MouseController : MonoBehaviour
 	public string OnMouseSelected = "OnMouseSelected";
 	public string OnIntensity = "OnIntensity";
 	public string OnMouseTranslationZ = "OnMouseTranslationZ";
+	public string SelectedMode = "SelectedMode";
+	public string LightResetPos ="LightResetPos";
+	public string DeselectedMode = "DeselectedMode";
 	float time =0.0f;
 	
 	private int mouseMode;
 	private bool mouseSelected;
+	private float time_delay;
+	private bool lightSelect = false;
+	private float DELAY_CONST = 0.2f;
+	
+	public static  int occlision;
  
     void Update()
     {
@@ -51,6 +59,16 @@ public class MouseController : MonoBehaviour
 		}
     }
 	
+	void DeSelected()
+	{
+			GameObject.Find("/Scene/SpotLight/SpotLight-1").SendMessage(DeselectedMode,null, SendMessageOptions.DontRequireReceiver);
+			GameObject.Find("/Scene/SpotLight/SpotLight-1").SendMessage(OnMouseSelected,false, SendMessageOptions.DontRequireReceiver);
+			GameObject.Find("/Scene/SpotLight/SpotLight-2").SendMessage(DeselectedMode,null, SendMessageOptions.DontRequireReceiver);
+			GameObject.Find("/Scene/SpotLight/SpotLight-2").SendMessage(OnMouseSelected,false, SendMessageOptions.DontRequireReceiver);
+			GameObject.Find("/Scene/SpotLight/SpotLight-3").SendMessage(DeselectedMode,null, SendMessageOptions.DontRequireReceiver);
+			GameObject.Find("/Scene/SpotLight/SpotLight-3").SendMessage(OnMouseSelected,false, SendMessageOptions.DontRequireReceiver);
+	}
+	 
 	
 	void Mouse_Interaction(bool RightHandMode)
 	{
@@ -59,8 +77,20 @@ public class MouseController : MonoBehaviour
 			rightHand = 1;
 		
         if ( Input.GetMouseButtonDown(rightHand))
-		{
-			 clickedGmObj = GetClickedGameObject();
+		{	
+			time_delay = Time.time;
+			if(lightSelect== true)
+			{
+				clickedGmObj = GetClickedGameObject();
+				clickedGmObj.SendMessage(OnMouseSelected, true,SendMessageOptions.DontRequireReceiver);
+				clickedGmObjAcquired = true;
+				mouseMode = 1;
+				mouseSelected = true;
+				return;
+			}
+			
+			occlision = -1;
+			clickedGmObj = GetClickedGameObject();
 			if (clickedGmObj != null)
 			{
 				clickedGmObj.SendMessage(OnMouseMode,1,SendMessageOptions.DontRequireReceiver);
@@ -69,24 +99,37 @@ public class MouseController : MonoBehaviour
 				mouseMode = 1;
 				mouseSelected = true;
 			}
+			else
+				print ("hello world");
 		}
 		else if(Input.GetMouseButtonUp(rightHand))
 		{
-			
-		 
-			 if (clickedGmObj != null)
-				clickedGmObj.SendMessage(OnMouseSelected, false,SendMessageOptions.DontRequireReceiver);
+			float delay = Time.time-time_delay;
+			print (delay);
+			if(delay<DELAY_CONST)
+				lightSelect = true;
 			else
+				lightSelect = false;
+			
+			DeSelected();
+			if(occlision >0)
 			{
-				clickedGmObj = GetClickedGameObject();
-				if (clickedGmObj != null)
-					clickedGmObj.SendMessage(OnMouseSelected, false,SendMessageOptions.DontRequireReceiver);	
+				if(clickedGmObj != null)
+					clickedGmObj.SendMessage(LightResetPos, occlision,SendMessageOptions.DontRequireReceiver);
+				
 			}
-			mouseSelected = false;
+			if (clickedGmObj != null)
+			{
+				clickedGmObj.SendMessage(OnMouseMode,3,SendMessageOptions.DontRequireReceiver);
+				mouseMode = 3;
+				mouseSelected =false;
+				print ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			}
+			
 			
 		}
 		
-		if ( Input.GetMouseButtonDown(1-rightHand))
+		else if ( Input.GetMouseButtonDown(1-rightHand))
 		{
 			clickedGmObj = GetClickedGameObject();
 			if (clickedGmObj != null)
@@ -94,24 +137,28 @@ public class MouseController : MonoBehaviour
 				clickedGmObj.SendMessage(OnMouseMode,2,SendMessageOptions.DontRequireReceiver);
 				clickedGmObj.SendMessage(OnMouseSelected, true,SendMessageOptions.DontRequireReceiver);
 				clickedGmObjAcquired = true;
-				mouseMode = 1;
+				mouseMode = 2;
 				mouseSelected = true;
 			}
 			
 		}
 		else if(Input.GetMouseButtonUp(1-rightHand))
 		{
+			DeSelected();
 			if (clickedGmObj != null)
-				clickedGmObj.SendMessage(OnMouseSelected, false,SendMessageOptions.DontRequireReceiver);
-			else
 			{
-				clickedGmObj = GetClickedGameObject();
-				if (clickedGmObj != null)
-					clickedGmObj.SendMessage(OnMouseSelected, false,SendMessageOptions.DontRequireReceiver);	
+				clickedGmObj.SendMessage(OnMouseMode,3,SendMessageOptions.DontRequireReceiver);
+				mouseMode = 3;
+				mouseSelected =false;
 			}
-			mouseSelected = false;
+		}
+		else if(clickedGmObj != null )
+		{
+			clickedGmObj.SendMessage(SelectedMode,null,SendMessageOptions.DontRequireReceiver);
+			
 		}
 		
+	
 		if(mouseSelected)
 		{
 			if(mouseMode ==1)
@@ -123,12 +170,32 @@ public class MouseController : MonoBehaviour
 		}
 		else
 		{
-			float delta = Input.GetAxis("Mouse ScrollWheel");
-			if (clickedGmObj != null)
-            	clickedGmObj.SendMessage(OnIntensity, delta, SendMessageOptions.DontRequireReceiver);
+			if(mouseMode ==3)
+			{
+				float delta = Input.GetAxis("Mouse ScrollWheel");
+				if (clickedGmObj != null)
+	            	clickedGmObj.SendMessage(OnIntensity, delta, SendMessageOptions.DontRequireReceiver);
+			}
+			
 		}
 	}
 	
+	
+	Vector3 GetRotation(GameObject obj)
+	{
+		Vector3 rotation = new Vector3(0,0,0);
+		foreach (Transform child in obj.transform)
+		{
+			if(child.gameObject.name =="mesh")
+			{
+				rotation.x = child.rotation.eulerAngles.x;
+				rotation.y = child.rotation.eulerAngles.y;
+				rotation.x = child.rotation.eulerAngles.z;
+				break;
+			}
+		}
+		return rotation;
+	}
 	
 	void SaveParameters(string name)
 	{
@@ -142,40 +209,43 @@ public class MouseController : MonoBehaviour
 		writer.WriteLine(output);
 		output = "TotalTimer:	"+time+"s\n";
 		writer.WriteLine(output);
-		obj = GameObject.Find("/SpotLight/SpotLight-1");
+		obj = GameObject.Find("/Scene/SpotLight/SpotLight-1");
 		if(obj !=null)
 		{
 			output = obj.name;
 			writer.WriteLine(output);
 			output ="Position:	X:	"+obj.transform.position.x+"	Y:	"+obj.transform.position.y+"	Z:	"+obj.transform.position.z;
 			writer.WriteLine(output);
-			output ="Rotation:	X:	"+obj.transform.rotation.eulerAngles.x+"	Y:	"+obj.transform.rotation.eulerAngles.y+"	Z:	"+obj.transform.rotation.eulerAngles.z;
+			Vector3 rot = GetRotation(obj);
+			output ="Rotation:	X:	"+rot.x+"	Y:	"+rot.y+"	Z:	"+rot.z;
 			writer.WriteLine(output);
 			output= "Intensity:	"+ GetIntensity(obj);
 			writer.WriteLine(output);
 		}
 		writer.WriteLine("\n");
-		obj = GameObject.Find("/SpotLight/SpotLight-2");
+		obj = GameObject.Find("/Scene/SpotLight/SpotLight-2");
 		if(obj !=null)
 		{
 			output = obj.name;
 			writer.WriteLine(output);
 			output ="Position:	X:	"+obj.transform.position.x+"	Y:	"+obj.transform.position.y+"	Z:	"+obj.transform.position.z;
 			writer.WriteLine(output);
-			output ="Rotation:	X:	"+obj.transform.rotation.eulerAngles.x+"	Y:	"+obj.transform.rotation.eulerAngles.y+"	Z:	"+obj.transform.rotation.eulerAngles.z;
+			Vector3 rot = GetRotation(obj);
+			output ="Rotation:	X:	"+rot.x+"	Y:	"+rot.y+"	Z:	"+rot.z;
 			writer.WriteLine(output);
 			output= "Intensity:	"+ GetIntensity(obj);
 			writer.WriteLine(output);
 		}
 		writer.WriteLine("\n");
-		obj = GameObject.Find("/SpotLight/SpotLight-3");
+		obj = GameObject.Find("/Scene/SpotLight/SpotLight-3");
 		if(obj !=null)
 		{
 			output = obj.name;
 			writer.WriteLine(output);
 			output ="Position:	X:	"+obj.transform.position.x+"	Y:	"+obj.transform.position.y+"	Z:	"+obj.transform.position.z;
 			writer.WriteLine(output);
-			output ="Rotation:	X:	"+obj.transform.rotation.eulerAngles.x+"	Y:	"+obj.transform.rotation.eulerAngles.y+"	Z:	"+obj.transform.rotation.eulerAngles.z;
+			Vector3 rot = GetRotation(obj);
+			output ="Rotation:	X:	"+rot.x+"	Y:	"+rot.y+"	Z:	"+rot.z;
 			writer.WriteLine(output);
 			output= "Intensity:	"+ GetIntensity(obj);
 			writer.WriteLine(output);
@@ -196,5 +266,42 @@ public class MouseController : MonoBehaviour
 			}
         }
 		return -1.0f;
+	}
+	
+	float Presion(float num)
+	{
+		return Mathf.Round(num * 10) / 10;
+	}
+	
+	void OnGUI()
+	{
+		string label="";
+		if(mouseMode ==1)
+			label ="Mode: Translation";
+		else if(mouseMode ==2)
+			label ="Mode: Rotation";
+		else if(mouseMode ==3)
+			label ="Mode: Selected";
+		
+		GUI.Label(new Rect(20,10,200,100),label);
+		
+		if(clickedGmObj != null)
+		{
+			string info_pos ="Position X: " + Presion(clickedGmObj.transform.position.x).ToString() +" Y: " + Presion(clickedGmObj.transform.position.y).ToString() + " Z: "+Presion(clickedGmObj.transform.position.z).ToString(); 
+			string info_rot="";
+			Vector3 rot = GetRotation(clickedGmObj);
+			info_rot  ="Rotation X: " + Presion(rot.x).ToString() +" Y: " + Presion(rot.y).ToString() + " Z: "+Presion(rot.z).ToString(); 
+				
+			string info_intensity ="Intensity: "+Presion(GetIntensity(clickedGmObj));
+			//infoclickedGmObj.transform.position.x.ToString;
+			GUI.Label(new Rect(20,20,200,100),info_pos);
+			GUI.Label(new Rect(20,30,200,100),info_rot);
+			GUI.Label(new Rect(20,40,200,100),info_intensity);
+			
+		}
+		
+		 Event e = Event.current;
+         if (e.button == 0 && e.isMouse)
+            Debug.Log("Left Click");
 	}
 }

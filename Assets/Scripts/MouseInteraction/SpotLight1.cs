@@ -1,20 +1,27 @@
 using UnityEngine;
 using System.Collections;
+using System.Threading;
 
 public class SpotLight1 : MonoBehaviour {
 	
 	
 	public bool selected = false;
 	public int  mode = 0;
+	public string OnOcclusion = "OnOcclusion";
+	
+	 
 	
 	private float translation_factor = 1f;
 	private float rotation_factor = 2.0f;
 	private int beam_id = 0;
 	private GameObject  occlisionObj;
+	private static ContactPoint contact;
+	private int pre_mode;
+	private int response = 200;
 	 
 	void Start () 
 	{
-		 
+		 Screen.fullScreen = true;
 	}
 	
 	// Update is called once per frame
@@ -28,11 +35,13 @@ public class SpotLight1 : MonoBehaviour {
 			if(mode ==1)
 				OnMouseTranslation();
 			else if(mode == 2)
-				OnMouseRotation();
-		}
-		else
-		{
-			renderer.enabled = false;
+			{
+				Vector2 rot = new Vector2(0f,0f);
+				rot.x = Input.GetAxis("Mouse X")*rotation_factor;
+				rot.y = 0f-Input.GetAxis("Mouse Y")*rotation_factor;
+				OnMouseRotation(rot);
+			}
+			
 		}
 	}
 	
@@ -52,7 +61,13 @@ public class SpotLight1 : MonoBehaviour {
 	
 	void OnMouseMode(int m_mode)
 	{
+		if (mode != m_mode)
+		{
+			if(m_mode ==1)
+				Thread.Sleep(response);
+		}
 		mode =  m_mode;
+		
 	}
 	
 	void OnMouseSelected(bool m_select)
@@ -82,9 +97,22 @@ public class SpotLight1 : MonoBehaviour {
 		transform.position = pos;
 	}
 	
-	void OnMouseRotation()
+	void OnMouseRotation(Vector2 rot)
 	{
-		transform.Rotate((Input.GetAxis("Mouse Y")*rotation_factor), (Input.GetAxis("Mouse X")*rotation_factor), 0, Space.World);
+		Quaternion rotation_X = transform.FindChild("light").transform.rotation;
+		print ("rotation"+ rotation_X);
+			
+		Vector3 trans =  new Vector3(-0.25f,0.0f,0.0f);
+		Vector3 transNeg =  new Vector3(0.25f,0.0f,-0.0f);
+		transform.FindChild("mesh").transform.Translate(transNeg);
+		transform.FindChild("mesh").Rotate(rot.y, rot.x, 0, Space.World);
+		transform.FindChild("mesh").transform.Translate(trans);
+		
+	 	
+		transform.FindChild("model").FindChild("lamp").Rotate(rot.y, rot.x, 0, Space.World);
+		transform.FindChild("light").Rotate(rot.y, rot.x, 0, Space.World);
+		transform.FindChild("Point light").Rotate(rot.y, rot.x, 0, Space.World);
+	
 		
 	}
 	
@@ -95,20 +123,52 @@ public class SpotLight1 : MonoBehaviour {
 		
 	}
 	
+	void DeselectedMode()
+	{
+		Renderer []  children;
+		children = gameObject.GetComponentsInChildren<Renderer>();
+        foreach (Renderer child in children) {
+            if(child.name =="mesh")
+			{
+				child.enabled = false;
+				break;
+			}
+        }
+	}
+	
+	
+	void LightResetPos(int beam)
+	{
+		print ("reset pos");
+		BeamTranslation(beam);
+	}
+	
 	void SelectedMode()
 	{
-		Color color = new Color(0.2f,0.4f,0.0f,0.5f);
-		renderer.enabled = true;
-		Material material = new Material(Shader.Find("Transparent/Diffuse"));
-        material.color = color;
-        renderer.material = material;
+		 
+		Renderer []  children;
+		children = gameObject.GetComponentsInChildren<Renderer>();
+        foreach (Renderer child in children) {
+            if(child.name =="mesh")
+			{
+				Color color = new Color(0.2f,0.4f,0.0f,0.5f);
+				child.enabled = true;
+				Material material = new Material(Shader.Find("Transparent/Diffuse"));
+		        material.color = color;
+		        child.material = material;
+				break;
+			}
+        }
 	}
 	
 	void OnCollisionEnter(Collision collision)	
 	{
+		
 		Debug.Log("Collided with " + collision.gameObject.name);
 		occlisionObj = collision.gameObject;
-		if((collision.gameObject.name != "SpotLight-1")&&(collision.gameObject.name != "SpotLight-2")&&(collision.gameObject.name != "SpotLight-3"))
+		
+		
+		if((collision.gameObject.name != "SpotLight-1")&&(collision.gameObject.name != "SpotLight-2")&&(collision.gameObject.name != "SpotLight-3")&&(collision.gameObject.name != "mesh"))
 		{
 			if(collision.gameObject.name=="struss-1")
 				beam_id = 1;
@@ -135,24 +195,33 @@ public class SpotLight1 : MonoBehaviour {
 				transform.eulerAngles = new Vector3(90, 180, 0);
 			else if (collision.gameObject.name=="struss-nine")
 				transform.eulerAngles = new Vector3(0, 270, 90);			
-			else beam_id = -1;
+			else 
+			{
+				beam_id = -1;
+			}
 			
 			if(beam_id >0)
 			{
 				Color color = new Color(0.0f,0.8f,0.2f,0.7f);
-				renderer.enabled = true;
 				Material material = new Material(Shader.Find("Transparent/Diffuse"));
 		        material.color = color;
 				collision.gameObject.renderer.material = material;
+				
+				
+				MouseController.occlision = beam_id;
+				contact = collision.contacts[0];
 			}
-			BeamTranslation(beam_id);
+			//BeamTranslation(beam_id);
 		}
 	}
 	
 	void OnCollisionExit(Collision collision) {
         
 		occlisionObj = collision.gameObject;
-		if((collision.gameObject.name != "SpotLight-1")&&(collision.gameObject.name != "SpotLight-2")&&(collision.gameObject.name != "SpotLight-3"))
+		
+		 
+		
+		if((collision.gameObject.name != "SpotLight-1")&&(collision.gameObject.name != "SpotLight-2")&&(collision.gameObject.name != "SpotLight-3")&&(collision.gameObject.name != "mesh"))
 		{
 			 
 			
@@ -174,15 +243,18 @@ public class SpotLight1 : MonoBehaviour {
 				beam_id = 8;
 			else if(collision.gameObject.name=="struss-9")
 				beam_id = 9;
-			else beam_id = -1;
+			else 
+			{
+				beam_id = -1;
+			}
 			
 			if(beam_id >0)
 			{
 				Color color = new Color(0.7f,0.7f,0.7f,1.0f);
-				renderer.enabled = true;
 				Material material = new Material(Shader.Find("Transparent/Diffuse"));
 		        material.color = color;
 				collision.gameObject.renderer.material = material;
+				contact = collision.contacts[0];
 			}
 		}
     }
@@ -190,32 +262,61 @@ public class SpotLight1 : MonoBehaviour {
 	
 	void BeamTranslation(int id)
 	{
+		Vector3 pos = contact.point;
+		print ("contract point"+pos);
 		
-		if(id <=3)
+		if(occlisionObj != null)
 		{
-			Vector3 pos = transform.position;
-			pos.y = occlisionObj.transform.position.y;
-			transform.position = pos;	 
-		}
-		else if(id <=6)
-		{
-			Vector3 pos = transform.position;
-			pos.y = occlisionObj.transform.position.y;
-			transform.position = pos;
-		}
-		else if(id ==9)
-		{
-			Vector3 pos = transform.position;
-			pos.y = occlisionObj.transform.position.y;
-			pos.z = occlisionObj.transform.position.z;
-			transform.position = pos;
-		}
-		else
-		{
-			Vector3 pos = transform.position;
-			pos.x = occlisionObj.transform.position.x;
-			pos.z = occlisionObj.transform.position.z;
-			transform.position = pos;
+			if(id <=3)
+			{
+				if(pos.x !=0 || pos.y !=0 || pos.z !=0  )
+				{
+					pos.x = pos.x -0.22f;
+					pos.y = occlisionObj.transform.position.y;
+					transform.position = pos;
+				}
+			}
+			else if(id <=6)
+			{
+				if(pos.x !=0 || pos.y !=0 || pos.z !=0  )
+				{
+					pos.x = pos.x +0.22f;
+					pos.y = occlisionObj.transform.position.y;
+					transform.position = pos;
+				}
+			}
+			
+			else if (id ==9)
+			{
+				if(pos.x !=0 || pos.y !=0 || pos.z !=0  )
+				{
+					 
+					pos.y = occlisionObj.transform.position.y-0.11f;
+					transform.position = pos;
+				}
+				
+			}
+			else if( id ==8)
+			{
+				if(pos.x !=0 || pos.y !=0 || pos.z !=0  )
+				{
+					pos.x = pos.x +0.13f; 
+					
+					pos.z = occlisionObj.transform.position.z;
+					transform.position = pos;
+				}
+			}
+			else if( id ==7)
+			{
+				if(pos.x !=0 || pos.y !=0 || pos.z !=0  )
+				{
+					pos.x = pos.x -0.13f; 
+					
+					pos.z = occlisionObj.transform.position.z;
+					transform.position = pos;
+				}
+			}
+		
 		}
 	}
 	
