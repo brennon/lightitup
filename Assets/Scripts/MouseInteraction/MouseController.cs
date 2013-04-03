@@ -36,11 +36,18 @@ public class MouseController : MonoBehaviour
     {
 		
         if(MouseMode)
-			Mouse_Interaction(RightHandUser);
-        
-        
+			Mouse_Interaction(RightHandUser);   
     
     }
+	
+	void OnLeapMode(int mode)
+	{
+		mouseMode = mode;
+	}
+	
+	void OnSetLeapLight (GameObject gamObj) {
+		clickedGmObj = gamObj;
+	}
  
     GameObject GetClickedGameObject()
     {
@@ -59,7 +66,7 @@ public class MouseController : MonoBehaviour
 		}
     }
 	
-	void DeSelected()
+	 void DeSelected()
 	{
 			GameObject.Find("/Scene/SpotLight/SpotLight-1").SendMessage(DeselectedMode,null, SendMessageOptions.DontRequireReceiver);
 			GameObject.Find("/Scene/SpotLight/SpotLight-1").SendMessage(OnMouseSelected,false, SendMessageOptions.DontRequireReceiver);

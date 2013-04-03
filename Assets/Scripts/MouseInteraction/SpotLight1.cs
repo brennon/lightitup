@@ -73,6 +73,8 @@ public class SpotLight1 : MonoBehaviour {
 	void OnMouseSelected(bool m_select)
 	{
 		selected = m_select;
+		if(selected == false)
+			DeselectedMode();
 	}
 	
 	void OnIntensity(float values)
@@ -99,9 +101,10 @@ public class SpotLight1 : MonoBehaviour {
 	
 	void OnMouseRotation(Vector2 rot)
 	{
-		Quaternion rotation_X = transform.FindChild("light").transform.rotation;
-		print ("rotation"+ rotation_X);
-			
+//		Quaternion rotation_X = transform.FindChild("light").transform.rotation;
+//		print ("rotation"+ rotation_X);
+		print ("ROTATION:"+rot);	
+		
 		Vector3 trans =  new Vector3(-0.25f,0.0f,0.0f);
 		Vector3 transNeg =  new Vector3(0.25f,0.0f,-0.0f);
 		transform.FindChild("mesh").transform.Translate(transNeg);
@@ -112,6 +115,10 @@ public class SpotLight1 : MonoBehaviour {
 		transform.FindChild("model").FindChild("lamp").Rotate(rot.y, rot.x, 0, Space.World);
 		transform.FindChild("light").Rotate(rot.y, rot.x, 0, Space.World);
 		transform.FindChild("Point light").Rotate(rot.y, rot.x, 0, Space.World);
+	
+//		transform.eulerAngles= new Vector3(rot.x,rot.y,0f);
+		
+	
 	
 		
 	}
