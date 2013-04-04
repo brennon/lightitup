@@ -73,14 +73,42 @@ public class ExperimentManager : MonoBehaviour {
 		
 		if (currentTrial < 12) {
 			Application.LoadLevel("Leap_Project");
-			this.SetupLevel();
+			SetupLevel(currentTrial/2);
 		} else if (currentTrial >= 12) {
 			// Save data here
 			Application.LoadLevel("End");
 		}
 	}
-	
-	private void SetupLevel() {
-		GameObject.Find("SpotLight-1").transform.Translate(0,0,0);
+
+	private void SetupLevel(int newLevel) {
+		for (int i = 0; i < 6; ++i) {
+			if (i != newLevel) {
+				string targetTag = "Trial" + i;
+				GameObject[] toDeactivate = GameObject.FindGameObjectsWithTag(targetTag);
+				foreach (GameObject obj in toDeactivate) {
+					Debug.Log ("deactivating " + obj);
+					obj.SetActive(false);
+					obj.activeInHierarchy = false;
+				}
+			}
+		}
+//		Debug.Log("setting up: " + newLevel);
+//		string targetTag = "Trial" + newLevel;
+//		Debug.Log ("activating objects with tag: " + targetTag);
+//		GameObject[] toActivate = GameObject.FindGameObjectsWithTag(targetTag);
+//		if (toActivate.Length == 0)
+//			Debug.Log("no objects found");
+//		foreach (GameObject obj in toActivate) {
+//			Debug.Log("found object: " + obj);
+//			Debug.Log("activeSelf: " + obj.activeSelf);
+//			Debug.Log("activeInHierarchy: " + obj.activeInHierarchy);
+//			obj.SetActive(true);
+//			Debug.Log("activated " + obj);
+//			Debug.Log("activeSelf: " + obj.activeSelf);
+//			Debug.Log("activeInHierarchy: " + obj.activeInHierarchy);
+//		}
+//		
+//		GameObject piano = GameObject.Find("Barrel");
+//		Debug.Log ("barrel: " + piano);
 	}
 }

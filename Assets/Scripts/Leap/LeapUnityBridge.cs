@@ -170,7 +170,7 @@ public class LeapUnityBridge : MonoBehaviour
 		// (This is set in the Unity Inspector)
 		foreach( GameObject fingerTip in GameObject.FindGameObjectsWithTag("FingerTip") )
 		{
-			Debug.Log ("adding component...");
+			// Debug.Log ("adding component...");
 			// Attach the LeapFingerCollisionDispatcher component to each
 			// fingertip--see the LeapFingerCollisionDispatcher script
 			fingerTip.AddComponent(typeof(LeapFingerCollisionDispatcher));	
