@@ -1,0 +1,187 @@
+fileFormatVersion: 2
+guid: b118d1269cef4854896941b7a8e14d9f
+labels:
+- Bomb
+- Lab
+- Table
+- Fertilizer
+- Tools
+- Wire
+- Workshop
+- Celphone
+- Cellphone
+- Fuse
+- Duct_Tape
+- Pliers
+- Switch
+- Pot
+- Cel
+- Cell
+- Phone
+ModelImporter:
+  serializedVersion: 15
+  fileIDToRecycleName:
+    100000: fertbag01_prp_1
+    100002: fertbag01_prp
+    100004: cellphone02_prp
+    100006: ducttape01_prp
+    100008: pot02_prp_1
+    100010: pot02_prp
+    100012: Pilers01_prp_1
+    100014: Pilers01_prp
+    100016: cellphone01_prp
+    100018: wirespool02_prp
+    100020: wirespool01_prp
+    100022: matrixTransform
+    100024: group_1
+    100026: sceneRoot 1
+    100028: group
+    100030: sceneRoot
+    100032: cellphone02_prp_1
+    100034: matrixTransform_9
+    100036: ducttape01_prp_1
+    100038: matrixTransform_10
+    100040: matrixTransform_8
+    100042: colored_wire01_prp_1
+    100044: matrixTransform_7
+    100046: colored_wire01_prp
+    100048: Deadman_switch01_prp_1
+    100050: matrixTransform_6
+    100052: Deadman_switch01_prp
+    100054: matrixTransform_5
+    100056: matrixTransform_4
+    100058: cellphone01_prp_1
+    100060: matrixTransform_3
+    100062: wirespool02_prp_1
+    100064: matrixTransform_2
+    100066: wirespool01_prp_1
+    100068: matrixTransform_1
+    100070: folding_table01_prop_1
+    100072: folding_table01_prop
+    100074: Collada_visual_scene_group 1
+    100076: Collada_visual_scene_group
+    100078: //RootNode
+    400000: fertbag01_prp_1
+    400002: fertbag01_prp
+    400004: cellphone02_prp
+    400006: ducttape01_prp
+    400008: pot02_prp_1
+    400010: pot02_prp
+    400012: Pilers01_prp_1
+    400014: Pilers01_prp
+    400016: cellphone01_prp
+    400018: wirespool02_prp
+    400020: wirespool01_prp
+    400022: matrixTransform
+    400024: group_1
+    400026: sceneRoot 1
+    400028: group
+    400030: sceneRoot
+    400032: cellphone02_prp_1
+    400034: matrixTransform_9
+    400036: ducttape01_prp_1
+    400038: matrixTransform_10
+    400040: matrixTransform_8
+    400042: colored_wire01_prp_1
+    400044: matrixTransform_7
+    400046: colored_wire01_prp
+    400048: Deadman_switch01_prp_1
+    400050: matrixTransform_6
+    400052: Deadman_switch01_prp
+    400054: matrixTransform_5
+    400056: matrixTransform_4
+    400058: cellphone01_prp_1
+    400060: matrixTransform_3
+    400062: wirespool02_prp_1
+    400064: matrixTransform_2
+    400066: wirespool01_prp_1
+    400068: matrixTransform_1
+    400070: folding_table01_prop_1
+    400072: folding_table01_prop
+    400074: Collada_visual_scene_group 1
+    400076: Collada_visual_scene_group
+    400078: //RootNode
+    2300000: fertbag01_prp_1
+    2300002: pot02_prp_1
+    2300004: Pilers01_prp_1
+    2300006: cellphone02_prp_1
+    2300008: ducttape01_prp_1
+    2300010: colored_wire01_prp_1
+    2300012: Deadman_switch01_prp_1
+    2300014: cellphone01_prp_1
+    2300016: wirespool02_prp_1
+    2300018: wirespool01_prp_1
+    2300020: folding_table01_prop_1
+    3300000: fertbag01_prp_1
+    3300002: pot02_prp_1
+    3300004: Pilers01_prp_1
+    3300006: cellphone02_prp_1
+    3300008: ducttape01_prp_1
+    3300010: colored_wire01_prp_1
+    3300012: Deadman_switch01_prp_1
+    3300014: cellphone01_prp_1
+    3300016: wirespool02_prp_1
+    3300018: wirespool01_prp_1
+    3300020: folding_table01_prop_1
+    4300000: folding_table01_prop_1
+    4300002: wirespool01_prp_1
+    4300004: wirespool02_prp_1
+    4300006: cellphone01_prp_1
+    4300008: Pilers01_prp_1
+    4300010: pot02_prp_1
+    4300012: Deadman_switch01_prp_1
+    4300014: colored_wire01_prp_1
+    4300016: ducttape01_prp_1
+    4300018: cellphone02_prp_1
+    4300020: fertbag01_prp_1
+    11100000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 3
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    handles: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  additionalBone: 1
+  animationType: 1
+  userData: 

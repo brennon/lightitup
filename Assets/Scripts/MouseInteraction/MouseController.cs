@@ -106,8 +106,6 @@ public class MouseController : MonoBehaviour
 				mouseMode = 1;
 				mouseSelected = true;
 			}
-			else
-				print ("hello world");
 		}
 		else if(Input.GetMouseButtonUp(rightHand))
 		{

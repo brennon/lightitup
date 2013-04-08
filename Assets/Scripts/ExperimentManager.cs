@@ -4,8 +4,9 @@ using System.Collections;
 public class ExperimentManager : MonoBehaviour {
 	
 	public string subjectID = "ID";
-	public int[] conditionList = new int[6];
+	public int[] conditionList = new int[12];
 	public int currentTrial = -1;
+	public int handedSelection = 0;
 	
 	// s_Instance is used to cache the instance found in the scene so we don't have to look it up every time.
     private static ExperimentManager s_Instance = null;
@@ -38,7 +39,7 @@ public class ExperimentManager : MonoBehaviour {
 	
 	void Start() {
 		// Randomize trials
-		int[,] conditions = {{0,1},{2,3},{4,5}};
+		int[,] conditions = {{0,1},{2,3},{4,5},{6,7},{8,9},{10,11}};
 		System.Random r = new System.Random();
 		for (int i = 2; i > 0; i--) {
 			int swapIndex = r.Next(i + 1);
@@ -70,15 +71,16 @@ public class ExperimentManager : MonoBehaviour {
 	public void AdvanceLevel() {
 		currentTrial++;
 		
-		if (currentTrial < 6) {
-			if (conditionList[currentTrial] % 2 == 0) {
-				Application.LoadLevel("Trial - Mouse");
-			} else {
-				Application.LoadLevel("Trial - Leap");
-			}
-		} else if (currentTrial >= 6) {
+		if (currentTrial < 12) {
+			Application.LoadLevel("Leap_Project");
+			this.SetupLevel();
+		} else if (currentTrial >= 12) {
 			// Save data here
 			Application.LoadLevel("End");
 		}
+	}
+	
+	private void SetupLevel() {
+		GameObject.Find("SpotLight-1").transform.Translate(0,0,0);
 	}
 }
