@@ -63,14 +63,14 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		// Return true if rotation is enabled and only one 
 		// pointable is touching the object.
 //		print (m_Touching.Count);
-		return LeapInput.EnableRotation && m_Touching.Count >= 1;
+		return LeapInput.EnableRotation && m_Touching.Count == 1;
 	}
 	
 	public virtual bool CheckShouldScale(Frame thisFrame)
 	{
 		// Return true if scaling is enabled and at least one 
 		// pointable is touching the object.
-		return LeapInput.EnableScaling && m_Touching.Count >= 1;
+		return LeapInput.EnableScaling && m_Touching.Count == 2;
 	}
 	
 	public virtual void DoMovement(Frame thisFrame)
@@ -133,7 +133,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 			relative_rot = rotation-pre_rot;
 			pre_rot = rotation;
 			m_FocusedObject.SendMessage("OnMouseRotation", relative_rot, SendMessageOptions.DontRequireReceiver);
-			print ("Rotating by: "+relative_rot);
+//			print ("Rotating by: "+relative_rot);
 		}
 			
 		
@@ -307,9 +307,11 @@ public class LeapUnitySelectionController : MonoBehaviour {
 			GameObject secFingTip = GameObject.Find("Leap Hands").GetComponent<LeapUnityHandController>().GetSecondFinger(finger);
 			if (finger == secFingTip)
 				print ("THIS IS THE SAME FINGER");
-			m_Touching.Add(secFingTip);
-			m_LastPos.Add(secFingTip.transform.position);
-//			Debug.Log ("Fingers touching: "+m_Touching.Count);
+			else {
+				m_Touching.Add(secFingTip);
+				m_LastPos.Add(secFingTip.transform.position);
+//				Debug.Log ("Fingers touching: "+m_Touching.Count);
+			}
 		}
 	}
 	
@@ -405,7 +407,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	protected const float kMovementThreshold = 2.0f;	// minimum translation before it is considered idle (counting from m_LastMovedTime)
 	protected Color kBlankColor = new Color(1,0,0,1);	// color during selection/deselection period
 	
-	private Material m_HighlightMaterial = null;
+//	private Material m_HighlightMaterial = null;
 	
 	// LIU: interaction mode active depending if the light is being touched
 	public static string ActiveMode;
