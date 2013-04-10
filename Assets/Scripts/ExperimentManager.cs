@@ -12,6 +12,7 @@ public class ExperimentManager : MonoBehaviour {
 	public int[,] trials = {{0,1,2,3},{4,5,6,7},{8,9,10,11}};
 	public int[] trialList;
 	
+	
 	// s_Instance is used to cache the instance found in the scene so we don't have to look it up every time.
     private static ExperimentManager s_Instance = null;
 	
@@ -100,43 +101,55 @@ public class ExperimentManager : MonoBehaviour {
 	public void AdvanceLevel() {
 		currentTrial++;
 		
+		// Task modes:
+		// --------------------------|
+		//              Mouse | Leap |
+		// --------------------------|
+		// Trans./Rot. |   0  |   2  |
+		// Trans./Int. |   1  |   3  |
+		// --------------------------|
+		
 		if (currentTrial < (totalTrials * tasksPerTrial)) {
+			GetCurrentLightSettings();
 			Application.LoadLevel("Leap_Project");
-			SetupLevel(trialList[currentTrial]/tasksPerTrial);
+			// Debug.Log ("setting up trial: " + currentTrial);
+			MouseController mouseController = (MouseController) GameObject.FindObjectOfType(typeof(MouseController));
+			mouseController.taskMode = trialList[currentTrial] % 2;
+			int thisTrial = trialList[currentTrial]/tasksPerTrial;
+			Debug.Log ("this trial: " + thisTrial);
+			// Debug.Log ("trial id: " + trialList[currentTrial]);
+			int thisTaskMode = mouseController.taskMode;
+			if (thisTaskMode == 0)
+				Debug.Log ("task: translation/rotation");
+			else
+				Debug.Log ("task: translation/intensity");
 		} else if (currentTrial >= 12) {
 			// Save data here
 			Application.LoadLevel("End");
 		}
 	}
 
-	private void SetupLevel(int newLevel) {
-		for (int i = 0; i < 6; ++i) {
+	private void SetupLevel(int newLevel) {		
+		for (int i = 0; i < totalTrials; ++i) {
 			if (i != newLevel) {
 				string targetTag = "Trial" + i;
 				GameObject[] toDeactivate = GameObject.FindGameObjectsWithTag(targetTag);
 				foreach (GameObject obj in toDeactivate) {
-					Debug.Log ("deactivating " + obj);
 					obj.SetActive(false);
 				}
 			}
 		}
-//		Debug.Log("setting up: " + newLevel);
-//		string targetTag = "Trial" + newLevel;
-//		Debug.Log ("activating objects with tag: " + targetTag);
-//		GameObject[] toActivate = GameObject.FindGameObjectsWithTag(targetTag);
-//		if (toActivate.Length == 0)
-//			Debug.Log("no objects found");
-//		foreach (GameObject obj in toActivate) {
-//			Debug.Log("found object: " + obj);
-//			Debug.Log("activeSelf: " + obj.activeSelf);
-//			Debug.Log("activeInHierarchy: " + obj.activeInHierarchy);
-//			obj.SetActive(true);
-//			Debug.Log("activated " + obj);
-//			Debug.Log("activeSelf: " + obj.activeSelf);
-//			Debug.Log("activeInHierarchy: " + obj.activeInHierarchy);
-//		}
-//		
-//		GameObject piano = GameObject.Find("Barrel");
-//		Debug.Log ("barrel: " + piano);
+	}
+	
+	private void OnLevelWasLoaded (int newLevel) {
+		if (Application.loadedLevelName == "Leap_Project" && currentTrial >= 0)
+			SetupLevel(trialList[currentTrial]/tasksPerTrial);
+	}
+	
+	private void GetCurrentLightSettings() {
+		GameObject l = GameObject.Find ("SpotLight-1/light");
+		Debug.Log ("intensity: " + l.light.intensity);
+		Debug.Log ("position: " + l.transform.position);
+		Debug.Log ("rotation: " + l.transform.rotation);
 	}
 }

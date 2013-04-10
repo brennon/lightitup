@@ -41,7 +41,7 @@ public class SpotLight1 : MonoBehaviour {
 			
 			if(mode ==1)
 			{	
-				print ("translation");
+				// print ("translation");
 				OnMouseTranslation();
 			}
 			else if(mode == 2)
@@ -78,7 +78,7 @@ public class SpotLight1 : MonoBehaviour {
 			Vector3 mousePos= Camera.main.WorldToScreenPoint(transform.position);
 			float z_pos = transform.position.z;
 		
-			print ("pre_pos:"+pre_position.z +  "  current:"+ z_pos);
+			// print ("pre_pos:"+pre_position.z +  "  current:"+ z_pos);
 		
 			if(z_pos != pre_position.z)
 				return;
@@ -147,7 +147,7 @@ public class SpotLight1 : MonoBehaviour {
 		sum_x += rot.x;
 		sum_y += rot.y;
 	 
-		print ("sum_x:"+sum_x +" sum_y:"+sum_y);
+		// print ("sum_x:"+sum_x +" sum_y:"+sum_y);
 		
 		if((Mathf.Abs(sum_x)<90) && (Mathf.Abs(sum_y)<90))
 		{
@@ -171,7 +171,7 @@ public class SpotLight1 : MonoBehaviour {
 	
 	 void OnLeapRotation(float yaw)
 	{
-		print ("Pitch: "+yaw+" , " + "yaw: " + yaw);
+		// print ("Pitch: "+yaw+" , " + "yaw: " + yaw);
 		//transform.Rotate((Input.GetAxis("Mouse Y")*rotation_factor), (Input.GetAxis("Mouse X")*rotation_factor), 0, Space.World);
 		
 	}
@@ -192,7 +192,7 @@ public class SpotLight1 : MonoBehaviour {
 	
 	void LightResetPos(int beam)
 	{
-		print ("reset pos");
+		// print ("reset pos");
 		BeamTranslation(beam);
 	}
 	
@@ -316,7 +316,7 @@ public class SpotLight1 : MonoBehaviour {
 	void BeamTranslation(int id)
 	{
 		Vector3 pos = contact.point;
-		print ("contract point"+pos);
+		// print ("contract point"+pos);
 		
 		if(occlisionObj != null)
 		{
@@ -443,9 +443,9 @@ public class SpotLight1 : MonoBehaviour {
 			
 		}
 		
-		 Event e = Event.current;
-         if (e.button == 0 && e.isMouse)
-            Debug.Log("Left Click");
+		 // Event e = Event.current;
+         // if (e.button == 0 && e.isMouse)
+            // Debug.Log("Left Click");
 	}
 	
 	

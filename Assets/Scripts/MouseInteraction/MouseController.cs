@@ -8,6 +8,7 @@ using System.IO;
  
 public class MouseController : MonoBehaviour
 {
+	public int taskMode; // This is the mode being set in each trial by the ExperimentManager
 	public static GameObject clickedGmObj = null;
 	public static bool MouseMode = true;
 	public bool RightHandUser = true;
@@ -134,7 +135,7 @@ public class MouseController : MonoBehaviour
 				clickedGmObj.SendMessage(OnMouseMode,3,SendMessageOptions.DontRequireReceiver);
 				mouseMode = 3;
 				mouseSelected =false;
-				print ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+				// print ("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 			}
 			
 			
@@ -175,7 +176,7 @@ public class MouseController : MonoBehaviour
 		{
 			if(mouseMode ==1)
 			{
-				print ("hello world~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+				// print ("hello world~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 				float delta = Input.GetAxis("Mouse ScrollWheel");
 				if (clickedGmObj != null)
             		clickedGmObj.SendMessage(OnMouseTranslationZ, delta, SendMessageOptions.DontRequireReceiver);

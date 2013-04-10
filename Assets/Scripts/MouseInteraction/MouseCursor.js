@@ -44,7 +44,7 @@ function Update() {
  
 function MoveMouse(mousePosX : float, mousePosY : float) {
    
-   print ("mousePosX:" + mousePosX+ "mousePosY" +mousePosY);
+   // print ("mousePosX:" + mousePosX+ "mousePosY" +mousePosY);
    //Vector3 zero_point =  new Vector3(0,0,0);
    Input.mousePosition.Set(0,0,0);
 }
