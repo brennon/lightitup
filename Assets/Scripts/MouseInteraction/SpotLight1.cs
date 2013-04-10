@@ -328,6 +328,80 @@ public class SpotLight1 : MonoBehaviour {
 	}
 	
 	
+	float GetIntensity(GameObject obj)
+	{
+		Light []  children;
+		children = obj.GetComponentsInChildren<Light>();
+        foreach (Light child in children) {
+            if(child.name =="light")
+			{
+				return child.intensity;
+			}
+        }
+		return -1.0f;
+	}
+	
+	float Presion(float num)
+	{
+		return Mathf.Round(num * 10) / 10;
+	}
+	
+	Vector3 GetRotation(GameObject obj)
+	{
+		Vector3 rotation = new Vector3(0,0,0);
+		foreach (Transform child in obj.transform)
+		{
+			if(child.gameObject.name =="mesh")
+			{
+				rotation.x = child.rotation.eulerAngles.x;
+				rotation.y = child.rotation.eulerAngles.y;
+				rotation.x = child.rotation.eulerAngles.z;
+				break;
+			}
+		}
+		return rotation;
+	}
+	
+	void OnGUI()
+	{
+		string label="";
+		int m_mode = 3;
+		GameObject gameobj = null;
+		if(MouseController.MouseMode)
+		{
+			m_mode = MouseController.mouseMode;
+			gameobj = MouseController.clickedGmObj;
+		}
+		if(m_mode ==1)
+			label ="Mode: Translation";
+		else if(m_mode ==2)
+			label ="Mode: Rotation";
+		else if(m_mode ==3)
+			label ="Mode: Selected";
+		
+		
+		
+		if(gameobj == transform.gameObject)
+		{
+			string info_pos ="Position X: " + Presion(transform.position.x).ToString() +" Y: " + Presion(transform.position.y).ToString() + " Z: "+Presion(transform.position.z).ToString(); 
+			string info_rot="";
+			Vector3 rot = GetRotation(transform.gameObject);
+			info_rot  ="Rotation X: " + Presion(rot.x).ToString() +" Y: " + Presion(rot.y).ToString() + " Z: "+Presion(rot.z).ToString(); 
+				
+			string info_intensity ="Intensity: "+Presion(GetIntensity(transform.gameObject));
+			//infoclickedGmObj.transform.position.x.ToString;
+			GUI.Label(new Rect(20,10,200,100),label);
+			GUI.Label(new Rect(20,20,200,100),info_pos);
+			GUI.Label(new Rect(20,30,200,100),info_rot);
+			GUI.Label(new Rect(20,40,200,100),info_intensity);
+			
+		}
+		
+		 Event e = Event.current;
+         if (e.button == 0 && e.isMouse)
+            Debug.Log("Left Click");
+	}
+	
 	
 	 
 	
