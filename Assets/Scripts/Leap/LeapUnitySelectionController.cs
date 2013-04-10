@@ -21,6 +21,10 @@ using Leap;
 
 public class LeapUnitySelectionController : MonoBehaviour {
 	
+	private Vector2 pre_rot;
+	private bool init_rot;
+		
+	
 	// Get a reference to the LeapUnitySelectionController (this is available because the script
 	// is attached by default to the LeapController object in the scene).
 	public static LeapUnitySelectionController Get()
@@ -58,6 +62,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	{
 		// Return true if rotation is enabled and only one 
 		// pointable is touching the object.
+//		print (m_Touching.Count);
 		return LeapInput.EnableRotation && m_Touching.Count == 1;
 	}
 	
@@ -65,7 +70,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	{
 		// Return true if scaling is enabled and at least one 
 		// pointable is touching the object.
-		return LeapInput.EnableScaling && m_Touching.Count >= 1;
+		return LeapInput.EnableScaling && m_Touching.Count == 2;
 	}
 	
 	public virtual void DoMovement(Frame thisFrame)
@@ -98,8 +103,44 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		// of the currently selected object.
 		m_FocusedObject.transform.position += (currPositionSum - lastPositionSum) / m_Touching.Count;
 	}
-
+	
 	public virtual void DoRotation(Frame thisFrame)
+	{
+		bool init = false;
+		if (ActiveMode != "Rotating") {
+			ActiveMode = "Rotating";
+			if(init_rot == true)
+			{
+				init = true;
+				init_rot = false;
+				m_FocusedObject.SendMessage("OnSetLeapLight", m_FocusedObject, SendMessageOptions.DontRequireReceiver);
+				m_FocusedObject.SendMessage("OnMode", 2, SendMessageOptions.DontRequireReceiver);
+			}
+		}
+		
+		Vector3 vFingerDir = LeapUnityHandController.point.Direction.ToUnity();
+//		Vector3 vFingerPos = LeapUnityHandController.point.TipPosition.ToUnityTranslated();
+		float offsetY = Vector3.Angle(Vector3.up, vFingerDir);
+		float offsetX = Vector3.Angle(Vector3.right, vFingerDir);
+		float yaw = offsetY.ToUnityPitch();
+		float pitch = offsetX.ToUnityYaw();
+		Vector2 rotation = new Vector2(-pitch,yaw);//new Vector2 ((float)(pitch/360f*Math.PI), (float)(yaw/360f*Math.PI));
+		Vector2 relative_rot = new Vector2(0,0);
+		if(init == true)
+			pre_rot = rotation;
+		else
+		{
+			relative_rot = rotation-pre_rot;
+			pre_rot = rotation;
+			m_FocusedObject.SendMessage("OnMouseRotation", relative_rot, SendMessageOptions.DontRequireReceiver);
+//			print ("Rotating by: "+relative_rot);
+		}
+			
+		
+		
+	}
+	
+	public virtual void DoRotation_Absolute(Frame thisFrame)
 	{
 		// Set the mode if not previously set
 		if (ActiveMode != "Rotating") {
@@ -112,8 +153,9 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		float offsetX = Vector3.Angle(Vector3.right, vFingerDir);
 		float pitch = offsetY.ToUnityPitch();
 		float yaw = offsetX.ToUnityYaw();
-		Vector2 rotation = new Vector2 (pitch,yaw);
-//		print ("Rotating by: "+rotation);
+		Vector2 rotation = new Vector2(pitch,yaw);//new Vector2 ((float)(pitch/360f*Math.PI), (float)(yaw/360f*Math.PI));
+		m_FocusedObject.SendMessage("OnMouseRotation", rotation, SendMessageOptions.DontRequireReceiver);
+		print ("Rotating by: "+rotation);
 //		m_FocusedObject.transform.RotateAroundLocal(new Vector3(0,1,0),yaw);
 	}
 	
@@ -265,9 +307,11 @@ public class LeapUnitySelectionController : MonoBehaviour {
 			GameObject secFingTip = GameObject.Find("Leap Hands").GetComponent<LeapUnityHandController>().GetSecondFinger(finger);
 			if (finger == secFingTip)
 				print ("THIS IS THE SAME FINGER");
-			m_Touching.Add(secFingTip);
-			m_LastPos.Add(secFingTip.transform.position);
-//			Debug.Log ("Fingers touching: "+m_Touching.Count);
+			else {
+				m_Touching.Add(secFingTip);
+				m_LastPos.Add(secFingTip.transform.position);
+//				Debug.Log ("Fingers touching: "+m_Touching.Count);
+			}
 		}
 	}
 	
@@ -335,11 +379,15 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	public void Select ()
 	{
 		m_Selected = !m_Selected;
+		
 	}
 	
 	void Start()
 	{
-		m_HighlightMaterial = Resources.Load("Materials/Highlight") as Material;
+//		m_HighlightMaterial = Resources.Load("Materials/Highlight") as Material;
+		
+		init_rot = true;
+		pre_rot = new Vector2(0f,0f);
 	}
 	
 	protected GameObject m_FocusedObject = null;
@@ -359,7 +407,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	protected const float kMovementThreshold = 2.0f;	// minimum translation before it is considered idle (counting from m_LastMovedTime)
 	protected Color kBlankColor = new Color(1,0,0,1);	// color during selection/deselection period
 	
-	private Material m_HighlightMaterial = null;
+//	private Material m_HighlightMaterial = null;
 	
 	// LIU: interaction mode active depending if the light is being touched
 	public static string ActiveMode;

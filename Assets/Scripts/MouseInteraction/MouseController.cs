@@ -8,8 +8,8 @@ using System.IO;
  
 public class MouseController : MonoBehaviour
 {
-	GameObject clickedGmObj = null;
-	public bool MouseMode = true;
+	public static GameObject clickedGmObj = null;
+	public static bool MouseMode = true;
 	public bool RightHandUser = true;
 	public bool clickedGmObjAcquired = false;
 	
@@ -24,7 +24,7 @@ public class MouseController : MonoBehaviour
 	public string DeselectedMode = "DeselectedMode";
 	float time =0.0f;
 	
-	private int mouseMode;
+	public static int mouseMode;
 	private bool mouseSelected;
 	private float time_delay;
 	private bool lightSelect = false;
@@ -36,11 +36,18 @@ public class MouseController : MonoBehaviour
     {
 		
         if(MouseMode)
-			Mouse_Interaction(RightHandUser);
-        
-        
+			Mouse_Interaction(RightHandUser);   
     
     }
+	
+	void OnLeapMode(int mode)
+	{
+		mouseMode = mode;
+	}
+	
+	void OnSetLeapLight (GameObject gamObj) {
+		clickedGmObj = gamObj;
+	}
  
     GameObject GetClickedGameObject()
     {
@@ -51,7 +58,10 @@ public class MouseController : MonoBehaviour
         // Casts the ray and get the first game object hit
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
 		{
-			return hit.transform.gameObject;
+			//return hit.transform.gameObject;
+			if(hit.transform.FindChild("mesh").transform.gameObject != null)
+				return hit.transform.gameObject;
+			else return null;
 		}
         else
 		{
@@ -59,7 +69,7 @@ public class MouseController : MonoBehaviour
 		}
     }
 	
-	void DeSelected()
+	 void DeSelected()
 	{
 			GameObject.Find("/Scene/SpotLight/SpotLight-1").SendMessage(DeselectedMode,null, SendMessageOptions.DontRequireReceiver);
 			GameObject.Find("/Scene/SpotLight/SpotLight-1").SendMessage(OnMouseSelected,false, SendMessageOptions.DontRequireReceiver);
@@ -79,10 +89,12 @@ public class MouseController : MonoBehaviour
         if ( Input.GetMouseButtonDown(rightHand))
 		{	
 			time_delay = Time.time;
-			if(lightSelect== true)
+			if(lightSelect== true && clickedGmObj != null)
 			{
+							 
 				clickedGmObj = GetClickedGameObject();
 				clickedGmObj.SendMessage(OnMouseSelected, true,SendMessageOptions.DontRequireReceiver);
+				
 				clickedGmObjAcquired = true;
 				mouseMode = 1;
 				mouseSelected = true;
@@ -91,6 +103,7 @@ public class MouseController : MonoBehaviour
 			
 			occlision = -1;
 			clickedGmObj = GetClickedGameObject();
+			clickedGmObj.SendMessage("TranslationReset", true,SendMessageOptions.DontRequireReceiver);
 			if (clickedGmObj != null)
 			{
 				clickedGmObj.SendMessage(OnMouseMode,1,SendMessageOptions.DontRequireReceiver);
@@ -146,6 +159,7 @@ public class MouseController : MonoBehaviour
 			if (clickedGmObj != null)
 			{
 				clickedGmObj.SendMessage(OnMouseMode,3,SendMessageOptions.DontRequireReceiver);
+				clickedGmObj.SendMessage("RotationSave",null,SendMessageOptions.DontRequireReceiver);
 				mouseMode = 3;
 				mouseSelected =false;
 			}
@@ -161,6 +175,7 @@ public class MouseController : MonoBehaviour
 		{
 			if(mouseMode ==1)
 			{
+				print ("hello world~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 				float delta = Input.GetAxis("Mouse ScrollWheel");
 				if (clickedGmObj != null)
             		clickedGmObj.SendMessage(OnMouseTranslationZ, delta, SendMessageOptions.DontRequireReceiver);
@@ -266,40 +281,7 @@ public class MouseController : MonoBehaviour
 		return -1.0f;
 	}
 	
-	float Presion(float num)
-	{
-		return Mathf.Round(num * 10) / 10;
-	}
+	 
 	
-	void OnGUI()
-	{
-		string label="";
-		if(mouseMode ==1)
-			label ="Mode: Translation";
-		else if(mouseMode ==2)
-			label ="Mode: Rotation";
-		else if(mouseMode ==3)
-			label ="Mode: Selected";
-		
-		GUI.Label(new Rect(20,10,200,100),label);
-		
-		if(clickedGmObj != null)
-		{
-			string info_pos ="Position X: " + Presion(clickedGmObj.transform.position.x).ToString() +" Y: " + Presion(clickedGmObj.transform.position.y).ToString() + " Z: "+Presion(clickedGmObj.transform.position.z).ToString(); 
-			string info_rot="";
-			Vector3 rot = GetRotation(clickedGmObj);
-			info_rot  ="Rotation X: " + Presion(rot.x).ToString() +" Y: " + Presion(rot.y).ToString() + " Z: "+Presion(rot.z).ToString(); 
-				
-			string info_intensity ="Intensity: "+Presion(GetIntensity(clickedGmObj));
-			//infoclickedGmObj.transform.position.x.ToString;
-			GUI.Label(new Rect(20,20,200,100),info_pos);
-			GUI.Label(new Rect(20,30,200,100),info_rot);
-			GUI.Label(new Rect(20,40,200,100),info_intensity);
-			
-		}
-		
-		 Event e = Event.current;
-         if (e.button == 0 && e.isMouse)
-            Debug.Log("Left Click");
-	}
+
 }

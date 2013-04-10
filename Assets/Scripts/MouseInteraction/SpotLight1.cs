@@ -18,10 +18,17 @@ public class SpotLight1 : MonoBehaviour {
 	private static ContactPoint contact;
 	private int pre_mode;
 	private int response = 200;
+	private bool scrow_init = true; 
+	public static Vector3 pre_position;
+	public static float sum_x =0.0f;
+	public static float sum_y =0.0f;
+	public static float pre_sum_x =0.0f;
+	public static float pre_sum_y = 0.0f;
 	 
 	void Start () 
 	{
-		 Screen.fullScreen = true;
+		 //Screen.fullScreen = true;
+		pre_position = transform.position;
 	}
 	
 	// Update is called once per frame
@@ -33,7 +40,10 @@ public class SpotLight1 : MonoBehaviour {
 			SelectedMode();
 			
 			if(mode ==1)
+			{	
+				print ("translation");
 				OnMouseTranslation();
+			}
 			else if(mode == 2)
 			{
 				Vector2 rot = new Vector2(0f,0f);
@@ -42,14 +52,36 @@ public class SpotLight1 : MonoBehaviour {
 				OnMouseRotation(rot);
 			}
 			
+		  
 		}
 	}
 	
+	void TranslationReset()
+	{
+		pre_position = transform.position;
+	}
+	
+	void RotationReset()
+	{
+		sum_x = pre_sum_x;
+		sum_y =  pre_sum_y;
+	}
+	
+	void RotationSave()
+	{
+		 pre_sum_x = sum_x;
+		 pre_sum_y = sum_y;
+	}
 	
 	void OnMouseTranslation()
 	{
 			Vector3 mousePos= Camera.main.WorldToScreenPoint(transform.position);
 			float z_pos = transform.position.z;
+		
+			print ("pre_pos:"+pre_position.z +  "  current:"+ z_pos);
+		
+			if(z_pos != pre_position.z)
+				return;
 			
 			mousePos.x = Input.mousePosition.x;
 			mousePos.y = Input.mousePosition.y;
@@ -57,6 +89,8 @@ public class SpotLight1 : MonoBehaviour {
 			Vector3 point = Camera.main.ScreenToWorldPoint(mousePos);
 			point.z = z_pos;
 			transform.position = point;
+		
+			pre_position = transform.position;
 	}
 	
 	void OnMouseMode(int m_mode)
@@ -65,6 +99,8 @@ public class SpotLight1 : MonoBehaviour {
 		{
 			if(m_mode ==1)
 				Thread.Sleep(response);
+			if(m_mode ==2)
+				RotationReset();
 		}
 		mode =  m_mode;
 		
@@ -73,6 +109,8 @@ public class SpotLight1 : MonoBehaviour {
 	void OnMouseSelected(bool m_select)
 	{
 		selected = m_select;
+		if(selected == false)
+			DeselectedMode();
 	}
 	
 	void OnIntensity(float values)
@@ -91,7 +129,12 @@ public class SpotLight1 : MonoBehaviour {
 	
 	void OnMouseTranslationZ(float values)
 	{
-		
+		/*
+		if(scrow_init == true)
+		{	
+			scrow_init = false;
+			mode = 3;
+		}*/
 		Vector3 pos = transform.position;
 		pos.z += values*translation_factor;
 		transform.position = pos;
@@ -99,9 +142,15 @@ public class SpotLight1 : MonoBehaviour {
 	
 	void OnMouseRotation(Vector2 rot)
 	{
-		Quaternion rotation_X = transform.FindChild("light").transform.rotation;
-		print ("rotation"+ rotation_X);
-			
+		 
+		 
+		sum_x += rot.x;
+		sum_y += rot.y;
+	 
+		print ("sum_x:"+sum_x +" sum_y:"+sum_y);
+		
+		if((Mathf.Abs(sum_x)<90) && (Mathf.Abs(sum_y)<90))
+		{
 		Vector3 trans =  new Vector3(-0.25f,0.0f,0.0f);
 		Vector3 transNeg =  new Vector3(0.25f,0.0f,-0.0f);
 		transform.FindChild("mesh").transform.Translate(transNeg);
@@ -112,6 +161,10 @@ public class SpotLight1 : MonoBehaviour {
 		transform.FindChild("model").FindChild("lamp").Rotate(rot.y, rot.x, 0, Space.World);
 		transform.FindChild("light").Rotate(rot.y, rot.x, 0, Space.World);
 		transform.FindChild("Point light").Rotate(rot.y, rot.x, 0, Space.World);
+		}
+		
+		
+	
 	
 		
 	}
@@ -320,6 +373,80 @@ public class SpotLight1 : MonoBehaviour {
 		}
 	}
 	
+	
+	float GetIntensity(GameObject obj)
+	{
+		Light []  children;
+		children = obj.GetComponentsInChildren<Light>();
+        foreach (Light child in children) {
+            if(child.name =="light")
+			{
+				return child.intensity;
+			}
+        }
+		return -1.0f;
+	}
+	
+	float Presion(float num)
+	{
+		return Mathf.Round(num * 10) / 10;
+	}
+	
+	Vector3 GetRotation(GameObject obj)
+	{
+		Vector3 rotation = new Vector3(0,0,0);
+		foreach (Transform child in obj.transform)
+		{
+			if(child.gameObject.name =="mesh")
+			{
+				rotation.x = child.rotation.eulerAngles.x;
+				rotation.y = child.rotation.eulerAngles.y;
+				rotation.x = child.rotation.eulerAngles.z;
+				break;
+			}
+		}
+		return rotation;
+	}
+	
+	void OnGUI()
+	{
+		string label="";
+		int m_mode = 3;
+		GameObject gameobj = null;
+		if(MouseController.MouseMode)
+		{
+			m_mode = MouseController.mouseMode;
+			gameobj = MouseController.clickedGmObj;
+		}
+		if(m_mode ==1)
+			label ="Mode: Translation";
+		else if(m_mode ==2)
+			label ="Mode: Rotation";
+		else if(m_mode ==3)
+			label ="Mode: Selected";
+		
+		
+		
+		if(gameobj == transform.gameObject)
+		{
+			string info_pos ="Position X: " + Presion(transform.position.x).ToString() +" Y: " + Presion(transform.position.y).ToString() + " Z: "+Presion(transform.position.z).ToString(); 
+			string info_rot="";
+			Vector3 rot = GetRotation(transform.gameObject);
+			info_rot  ="Rotation X: " + Presion(rot.x).ToString() +" Y: " + Presion(rot.y).ToString() + " Z: "+Presion(rot.z).ToString(); 
+				
+			string info_intensity ="Intensity: "+Presion(GetIntensity(transform.gameObject));
+			//infoclickedGmObj.transform.position.x.ToString;
+			GUI.Label(new Rect(20,10,200,100),label);
+			GUI.Label(new Rect(20,20,200,100),info_pos);
+			GUI.Label(new Rect(20,30,200,100),info_rot);
+			GUI.Label(new Rect(20,40,200,100),info_intensity);
+			
+		}
+		
+		 Event e = Event.current;
+         if (e.button == 0 && e.isMouse)
+            Debug.Log("Left Click");
+	}
 	
 	
 	 

@@ -116,7 +116,8 @@ public class LeapUnityHandController : MonoBehaviour
 		}
 	}
 	
-	// Decides the interaction mode based on the visible fingers
+	// Decides the interaction mode based on the visible fingers 
+	// [NOT USED]
 	void SetInteractionMode () {
 		if (FingerTypes.Count == 0)
 			print ("Nothing");
@@ -135,6 +136,7 @@ public class LeapUnityHandController : MonoBehaviour
 	}
 	
 	// Evaluates the visible fingers and adds them in the FingerTypes dictionary (<int id>: <string type>)
+	// [NOT USED]
 	void EvaluateNewFinger (Pointable finger) {
 		Leap.Vector handCenter = finger.Hand.SphereCenter;
 		if (Math.Abs(handCenter.x - finger.TipPosition.x) < 40 && Math.Abs(handCenter.z - finger.TipPosition.z) > 15) {
@@ -145,6 +147,11 @@ public class LeapUnityHandController : MonoBehaviour
 //			print ("This is the thumb: "+finger.Id);
 			FingerTypes.Add(finger.Id, "thumb");
 		}
+	}
+	
+	// Get the max number of fingers that should be visible: 1 for translation/orientation, 2 for translation/scaling
+	int GetAllowableFingers() {
+		return LeapInput.TaskMode + 1;
 	}
 	
 	public GameObject GetSecondFinger (GameObject firstFing) {
@@ -190,14 +197,15 @@ public class LeapUnityHandController : MonoBehaviour
 		int index = Array.FindIndex(m_fingerIDs, id => id == -1);
 		// Allow only two fingers to be visible
 		// if this is there are less than 2 fingers check which type is the new: thumb or index	
-		if (index <= 1) {
-			EvaluateNewFinger (p);
-			// and change the interaciton mode accordingly
-			SetInteractionMode();
-		}
-		else {
+		if (index >= GetAllowableFingers()) {
 			return;
+//			EvaluateNewFinger (p);
+//			// and change the interaciton mode accordingly
+//			SetInteractionMode();
 		}
+//		else {
+//			return;
+//		}
 		// If there is an available slot in the array:
 		if( index != -1 )
 		{
@@ -218,7 +226,7 @@ public class LeapUnityHandController : MonoBehaviour
 		{
 			// Remove the lost finger from the dicitonary and update the interaction mode
 			FingerTypes.Remove(lostID);
-			SetInteractionMode();
+//			SetInteractionMode();
 			// Change the state of the pointable to invalid.
 			updatePointable( Pointable.Invalid, m_fingers[index] );
 			// Free up the slot in m_fingerIDs by setting it to -1.

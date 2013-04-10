@@ -26,6 +26,8 @@ public static class LeapInput
 	public static bool EnableRotation = false;
 	public static bool EnableScaling = false;
 	
+	public static int TaskMode = 0;
+	
 	/// <summary>
 	/// Delegates for the events to be dispatched. LeapUnityHandController implements these.
 	/// </summary>
@@ -72,6 +74,30 @@ public static class LeapInput
 		}
 	}
 	
+	public static void ChangeMode (int mod) {
+		TaskMode = mod;
+		if (TaskMode >= 0) {
+			EnableTranslation = true;
+			if (TaskMode == 0) {
+				Debug.Log ("TASK MODE: TRANSLATION/ROTATION");
+				EnableRotation = true;
+				EnableScaling = false;
+			}
+			else if (TaskMode == 1) {
+				Debug.Log ("TASK MODE: TRANSLATION/INTENSITY");
+				EnableRotation = false;
+				EnableScaling = true;
+			}
+		}
+		else {
+			Debug.Log ("LEAP OFF");
+			EnableTranslation = false;
+			EnableRotation = false;
+			EnableScaling = false;
+		}
+	}
+	
+	// NOT USED! changes the mode according to fingers visible (called from HandController>SetInteractionMode)
 	public static void EnableInteraction (string type) {
 		Debug.Log ("Action mode: " + type);
 		LeapInput.EnableRotation = false;
