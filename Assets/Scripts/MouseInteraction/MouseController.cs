@@ -2,9 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System;
 using System.IO;
-
-
-
  
 public class MouseController : MonoBehaviour
 {
@@ -74,10 +71,10 @@ public class MouseController : MonoBehaviour
 	{
 			GameObject.Find("/Scene/SpotLight/SpotLight-1").SendMessage(DeselectedMode,null, SendMessageOptions.DontRequireReceiver);
 			GameObject.Find("/Scene/SpotLight/SpotLight-1").SendMessage(OnMouseSelected,false, SendMessageOptions.DontRequireReceiver);
-			GameObject.Find("/Scene/SpotLight/SpotLight-2").SendMessage(DeselectedMode,null, SendMessageOptions.DontRequireReceiver);
-			GameObject.Find("/Scene/SpotLight/SpotLight-2").SendMessage(OnMouseSelected,false, SendMessageOptions.DontRequireReceiver);
-			GameObject.Find("/Scene/SpotLight/SpotLight-3").SendMessage(DeselectedMode,null, SendMessageOptions.DontRequireReceiver);
-			GameObject.Find("/Scene/SpotLight/SpotLight-3").SendMessage(OnMouseSelected,false, SendMessageOptions.DontRequireReceiver);
+			// GameObject.Find("/Scene/SpotLight/SpotLight-2").SendMessage(DeselectedMode,null, SendMessageOptions.DontRequireReceiver);
+			// GameObject.Find("/Scene/SpotLight/SpotLight-2").SendMessage(OnMouseSelected,false, SendMessageOptions.DontRequireReceiver);
+			// GameObject.Find("/Scene/SpotLight/SpotLight-3").SendMessage(DeselectedMode,null, SendMessageOptions.DontRequireReceiver);
+			// GameObject.Find("/Scene/SpotLight/SpotLight-3").SendMessage(OnMouseSelected,false, SendMessageOptions.DontRequireReceiver);
 	}
 	 
 	
