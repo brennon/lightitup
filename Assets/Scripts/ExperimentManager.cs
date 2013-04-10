@@ -88,7 +88,6 @@ public class ExperimentManager : MonoBehaviour {
 				foreach (GameObject obj in toDeactivate) {
 					Debug.Log ("deactivating " + obj);
 					obj.SetActive(false);
-					obj.activeInHierarchy = false;
 				}
 			}
 		}
