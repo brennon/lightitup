@@ -4,9 +4,13 @@ using System.Collections;
 public class ExperimentManager : MonoBehaviour {
 	
 	public string subjectID = "ID";
-	public int[] conditionList = new int[12];
+	public int[] conditionList;
 	public int currentTrial = -1;
 	public int handedSelection = 0;
+	public int tasksPerTrial = 4;
+	public int totalTrials = 3;
+	public int[,] trials = {{0,1,2,3},{4,5,6,7},{8,9,10,11}};
+	public int[] trialList;
 	
 	// s_Instance is used to cache the instance found in the scene so we don't have to look it up every time.
     private static ExperimentManager s_Instance = null;
@@ -37,43 +41,68 @@ public class ExperimentManager : MonoBehaviour {
         s_Instance = null;
     }
 	
-	void Start() {
-		// Randomize trials
-		int[,] conditions = {{0,1},{2,3},{4,5},{6,7},{8,9},{10,11}};
-		System.Random r = new System.Random();
-		for (int i = 2; i > 0; i--) {
-			int swapIndex = r.Next(i + 1);
-			int currentLeft = conditions[swapIndex,0];
-			int currentRight = conditions[swapIndex,1];
-			conditions[swapIndex,0] = conditions[i,0];
-			conditions[swapIndex,1] = conditions[i,1];
-			conditions[i,0] = currentLeft;
-			conditions[i,1] = currentRight;
+	void PrintTrials(int[,] trials) {
+		string display = "trials: {";
+		
+		for (int i = 0; i < totalTrials; i++) {
+			display += "{";
+			for (int j = 0; j < tasksPerTrial; j++) {
+				display += trials[i,j];
+				if (tasksPerTrial - j > 1)
+					display += ",";
+			}
+			display += "}";
+			if (totalTrials - i > 1)
+				display += ",";
 		}
 		
-		// Randomize mouse/Leap order
-		for (int i = 2; i >= 0; i--) {
-			int swapIndex = r.Next(2);
-			if (swapIndex == 0) {
-				int current = conditions[i,1];
-				conditions[i,1] = conditions[i,0];
-				conditions[i,0] = current;
+		display += "}";
+		
+		Debug.Log (display);
+	}
+	
+	void Start() {
+		// Randomize trial order
+		System.Random r = new System.Random();
+		for (int i = totalTrials - 1; i > 0; i--) {
+			int j = r.Next(i + 1);
+			// Debug.Log("swapping trial " + i + " with trial " + j);
+			for (int k = 0; k < tasksPerTrial; k++) {
+				int temp = trials[i,k];
+				trials[i,k] = trials[j,k];
+				trials[j,k] = temp;
+			}			
+		}		
+		
+		// Randomize task order
+		for (int i = 0; i < totalTrials; i++) {
+			// Debug.Log ("randomizing trial " + i);
+			for (int j = tasksPerTrial - 1; j > 0; j--) {				
+				int k = r.Next (j + 1);
+				// Debug.Log("swapping task " + j + " with task " + k);
+				int temp = trials[i,j];
+				trials[i,j] = trials[i,k];
+				trials[i,k] = temp;
+				// PrintTrials(trials);
 			}
 		}
 		
-		// Save ordering to conditionList
-		for (int i = 0; i < 3; i++) {
-			conditionList[i*2] = conditions[i,0];
-			conditionList[i*2+1] = conditions[i,1];
-		}		
+		// Flatten ordering and save in trialList
+		trialList = new int[totalTrials * tasksPerTrial];
+		for (int i = 0; i < totalTrials; i++) {
+			for (int j = 0; j < tasksPerTrial; j++) {
+				int index = i * tasksPerTrial + j;
+				trialList[index] = trials[i,j];
+			}			
+		}
 	}
 	
 	public void AdvanceLevel() {
 		currentTrial++;
 		
-		if (currentTrial < 12) {
+		if (currentTrial < (totalTrials * tasksPerTrial)) {
 			Application.LoadLevel("Leap_Project");
-			SetupLevel(currentTrial/2);
+			SetupLevel(trialList[currentTrial]/tasksPerTrial);
 		} else if (currentTrial >= 12) {
 			// Save data here
 			Application.LoadLevel("End");
