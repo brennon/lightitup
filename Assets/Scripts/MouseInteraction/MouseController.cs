@@ -58,7 +58,10 @@ public class MouseController : MonoBehaviour
         // Casts the ray and get the first game object hit
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
 		{
-			return hit.transform.gameObject;
+			//return hit.transform.gameObject;
+			if(hit.transform.FindChild("mesh").transform.gameObject != null)
+				return hit.transform.gameObject;
+			else return null;
 		}
         else
 		{
@@ -86,10 +89,12 @@ public class MouseController : MonoBehaviour
         if ( Input.GetMouseButtonDown(rightHand))
 		{	
 			time_delay = Time.time;
-			if(lightSelect== true)
+			if(lightSelect== true && clickedGmObj != null)
 			{
+							 
 				clickedGmObj = GetClickedGameObject();
 				clickedGmObj.SendMessage(OnMouseSelected, true,SendMessageOptions.DontRequireReceiver);
+				
 				clickedGmObjAcquired = true;
 				mouseMode = 1;
 				mouseSelected = true;
@@ -98,6 +103,7 @@ public class MouseController : MonoBehaviour
 			
 			occlision = -1;
 			clickedGmObj = GetClickedGameObject();
+			clickedGmObj.SendMessage("TranslationReset", true,SendMessageOptions.DontRequireReceiver);
 			if (clickedGmObj != null)
 			{
 				clickedGmObj.SendMessage(OnMouseMode,1,SendMessageOptions.DontRequireReceiver);
@@ -168,6 +174,7 @@ public class MouseController : MonoBehaviour
 		{
 			if(mouseMode ==1)
 			{
+				print ("hello world~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 				float delta = Input.GetAxis("Mouse ScrollWheel");
 				if (clickedGmObj != null)
             		clickedGmObj.SendMessage(OnMouseTranslationZ, delta, SendMessageOptions.DontRequireReceiver);

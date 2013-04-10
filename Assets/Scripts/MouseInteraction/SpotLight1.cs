@@ -18,10 +18,13 @@ public class SpotLight1 : MonoBehaviour {
 	private static ContactPoint contact;
 	private int pre_mode;
 	private int response = 200;
+	private bool scrow_init = true; 
+	public static Vector3 pre_position;
 	 
 	void Start () 
 	{
-		 Screen.fullScreen = true;
+		 //Screen.fullScreen = true;
+		pre_position = transform.position;
 	}
 	
 	// Update is called once per frame
@@ -33,7 +36,10 @@ public class SpotLight1 : MonoBehaviour {
 			SelectedMode();
 			
 			if(mode ==1)
+			{
+				print ("translation");
 				OnMouseTranslation();
+			}
 			else if(mode == 2)
 			{
 				Vector2 rot = new Vector2(0f,0f);
@@ -42,14 +48,24 @@ public class SpotLight1 : MonoBehaviour {
 				OnMouseRotation(rot);
 			}
 			
+		  
 		}
 	}
 	
+	void TranslationReset()
+	{
+		pre_position = transform.position;
+	}
 	
 	void OnMouseTranslation()
 	{
 			Vector3 mousePos= Camera.main.WorldToScreenPoint(transform.position);
 			float z_pos = transform.position.z;
+		
+			print ("pre_pos:"+pre_position.z +  "  current:"+ z_pos);
+		
+			if(z_pos != pre_position.z)
+				return;
 			
 			mousePos.x = Input.mousePosition.x;
 			mousePos.y = Input.mousePosition.y;
@@ -57,6 +73,8 @@ public class SpotLight1 : MonoBehaviour {
 			Vector3 point = Camera.main.ScreenToWorldPoint(mousePos);
 			point.z = z_pos;
 			transform.position = point;
+		
+			pre_position = transform.position;
 	}
 	
 	void OnMouseMode(int m_mode)
@@ -93,7 +111,12 @@ public class SpotLight1 : MonoBehaviour {
 	
 	void OnMouseTranslationZ(float values)
 	{
-		
+		/*
+		if(scrow_init == true)
+		{	
+			scrow_init = false;
+			mode = 3;
+		}*/
 		Vector3 pos = transform.position;
 		pos.z += values*translation_factor;
 		transform.position = pos;
