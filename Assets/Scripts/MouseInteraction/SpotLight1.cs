@@ -20,6 +20,10 @@ public class SpotLight1 : MonoBehaviour {
 	private int response = 200;
 	private bool scrow_init = true; 
 	public static Vector3 pre_position;
+	public static float sum_x =0.0f;
+	public static float sum_y =0.0f;
+	public static float pre_sum_x =0.0f;
+	public static float pre_sum_y = 0.0f;
 	 
 	void Start () 
 	{
@@ -36,7 +40,7 @@ public class SpotLight1 : MonoBehaviour {
 			SelectedMode();
 			
 			if(mode ==1)
-			{
+			{	
 				print ("translation");
 				OnMouseTranslation();
 			}
@@ -55,6 +59,18 @@ public class SpotLight1 : MonoBehaviour {
 	void TranslationReset()
 	{
 		pre_position = transform.position;
+	}
+	
+	void RotationReset()
+	{
+		sum_x = pre_sum_x;
+		sum_y =  pre_sum_y;
+	}
+	
+	void RotationSave()
+	{
+		 pre_sum_x = sum_x;
+		 pre_sum_y = sum_y;
 	}
 	
 	void OnMouseTranslation()
@@ -83,6 +99,8 @@ public class SpotLight1 : MonoBehaviour {
 		{
 			if(m_mode ==1)
 				Thread.Sleep(response);
+			if(m_mode ==2)
+				RotationReset();
 		}
 		mode =  m_mode;
 		
@@ -124,10 +142,15 @@ public class SpotLight1 : MonoBehaviour {
 	
 	void OnMouseRotation(Vector2 rot)
 	{
-//		Quaternion rotation_X = transform.FindChild("light").transform.rotation;
-//		print ("rotation"+ rotation_X);
-		print ("ROTATION:"+rot);	
+		 
+		 
+		sum_x += rot.x;
+		sum_y += rot.y;
+	 
+		print ("sum_x:"+sum_x +" sum_y:"+sum_y);
 		
+		if((Mathf.Abs(sum_x)<90) && (Mathf.Abs(sum_y)<90))
+		{
 		Vector3 trans =  new Vector3(-0.25f,0.0f,0.0f);
 		Vector3 transNeg =  new Vector3(0.25f,0.0f,-0.0f);
 		transform.FindChild("mesh").transform.Translate(transNeg);
@@ -138,8 +161,8 @@ public class SpotLight1 : MonoBehaviour {
 		transform.FindChild("model").FindChild("lamp").Rotate(rot.y, rot.x, 0, Space.World);
 		transform.FindChild("light").Rotate(rot.y, rot.x, 0, Space.World);
 		transform.FindChild("Point light").Rotate(rot.y, rot.x, 0, Space.World);
-	
-//		transform.eulerAngles= new Vector3(rot.x,rot.y,0f);
+		}
+		
 		
 	
 	

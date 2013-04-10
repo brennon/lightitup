@@ -159,6 +159,7 @@ public class MouseController : MonoBehaviour
 			if (clickedGmObj != null)
 			{
 				clickedGmObj.SendMessage(OnMouseMode,3,SendMessageOptions.DontRequireReceiver);
+				clickedGmObj.SendMessage("RotationSave",null,SendMessageOptions.DontRequireReceiver);
 				mouseMode = 3;
 				mouseSelected =false;
 			}
