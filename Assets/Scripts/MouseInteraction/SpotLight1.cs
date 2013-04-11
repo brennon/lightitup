@@ -18,7 +18,7 @@ public class SpotLight1 : MonoBehaviour {
 	private static ContactPoint contact;
 	private int pre_mode;
 	private int response = 200;
-	private bool scrow_init = true; 
+//	private bool scrow_init = true; 
 	public static Vector3 pre_position;
 	public static float sum_x =0.0f;
 	public static float sum_y =0.0f;
@@ -151,16 +151,8 @@ public class SpotLight1 : MonoBehaviour {
 		
 		if((Mathf.Abs(sum_x)<90) && (Mathf.Abs(sum_y)<90))
 		{
-		Vector3 trans =  new Vector3(-0.25f,0.0f,0.0f);
-		Vector3 transNeg =  new Vector3(0.25f,0.0f,-0.0f);
-		transform.FindChild("mesh").transform.Translate(transNeg);
-		transform.FindChild("mesh").Rotate(rot.y, rot.x, 0, Space.World);
-		transform.FindChild("mesh").transform.Translate(trans);
-		
-	 	
-		transform.FindChild("model").FindChild("lamp").Rotate(rot.y, rot.x, 0, Space.World);
-		transform.FindChild("light").Rotate(rot.y, rot.x, 0, Space.World);
-		transform.FindChild("Point light").Rotate(rot.y, rot.x, 0, Space.World);
+			transform.Rotate(rot.y, rot.x, 0, Space.World);
+		 
 		}
 		
 		

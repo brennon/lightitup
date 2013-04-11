@@ -56,10 +56,7 @@ public class MouseController : MonoBehaviour
         // Casts the ray and get the first game object hit
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
 		{
-			//return hit.transform.gameObject;
-			if(hit.transform.FindChild("mesh").transform.gameObject != null)
-				return hit.transform.gameObject;
-			else return null;
+			return hit.transform.gameObject;
 		}
         else
 		{
@@ -67,15 +64,7 @@ public class MouseController : MonoBehaviour
 		}
     }
 	
-	 void DeSelected()
-	{
-			GameObject.Find("/Scene/SpotLight/SpotLight-1").SendMessage(DeselectedMode,null, SendMessageOptions.DontRequireReceiver);
-			GameObject.Find("/Scene/SpotLight/SpotLight-1").SendMessage(OnMouseSelected,false, SendMessageOptions.DontRequireReceiver);
-			// GameObject.Find("/Scene/SpotLight/SpotLight-2").SendMessage(DeselectedMode,null, SendMessageOptions.DontRequireReceiver);
-			// GameObject.Find("/Scene/SpotLight/SpotLight-2").SendMessage(OnMouseSelected,false, SendMessageOptions.DontRequireReceiver);
-			// GameObject.Find("/Scene/SpotLight/SpotLight-3").SendMessage(DeselectedMode,null, SendMessageOptions.DontRequireReceiver);
-			// GameObject.Find("/Scene/SpotLight/SpotLight-3").SendMessage(OnMouseSelected,false, SendMessageOptions.DontRequireReceiver);
-	}
+	 
 	 
 	
 	void Mouse_Interaction(bool RightHandMode)
@@ -119,8 +108,7 @@ public class MouseController : MonoBehaviour
 				lightSelect = true;
 			else
 				lightSelect = false;
-			
-			DeSelected();
+			 
 			if(occlision >0)
 			{
 				if(clickedGmObj != null)
@@ -153,7 +141,7 @@ public class MouseController : MonoBehaviour
 		}
 		else if(Input.GetMouseButtonUp(1-rightHand))
 		{
-			DeSelected();
+			 
 			if (clickedGmObj != null)
 			{
 				clickedGmObj.SendMessage(OnMouseMode,3,SendMessageOptions.DontRequireReceiver);
