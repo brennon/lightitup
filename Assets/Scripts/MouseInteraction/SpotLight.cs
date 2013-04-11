@@ -7,12 +7,16 @@ public class SpotLight : MonoBehaviour {
 	public int  MouseMode = -1;
 	public Vector3 targetPosition;
 	
+	public string[] target = {"TargetCube-1","TargetCube-2","TargetCube-3"};
+	public int targetID = 0;
+	
 	private float rotation_factor = 2.0f;
 	private Vector3 originia_position;
 	private Quaternion original_rotation;
 	private float   original_intensity;
 	//private float   original_rotation = 0;
 	// Use this for initialization
+	
 	
 	void Start () {
 		
@@ -33,7 +37,8 @@ public class SpotLight : MonoBehaviour {
 			
 			if(MouseMode ==1) //translation
 			{
-				OnMouseTranslation();
+				//OnMouseTranslation();
+				OnTragetMode();
 			}
 			else if(MouseMode ==2)
 			{
@@ -42,10 +47,11 @@ public class SpotLight : MonoBehaviour {
 				rot.y = 0f-Input.GetAxis("Mouse Y")*rotation_factor;
 				transform.Rotate(rot.y, rot.x, 0, Space.World);
 			}
-			else if(MouseMode == 4)
+			else 
 			{
 				OnTragetMode();
 			}
+			 
 		}
 		else
 		{
@@ -61,24 +67,25 @@ public class SpotLight : MonoBehaviour {
 		MouseMode = mode;
 	}
 	
+	void SetTargetID(int id)
+	{
+		targetID = id;
+	}
+	
 	
 	void OnTragetMode()
 	{
 		OnMouseTranslation();
 		
-		Vector3 offset =  transform.position -targetPosition ;
-		
-		float pre_angle_x =0;
-		
-		Vector3 tmp  =Vector3.Cross(-offset,new Vector3(8,10,0));
-		transform.LookAt(tmp);
-		
-		float angle_1 = Mathf.Atan(offset.x/offset.y);
-		
-		
-		
-		//transform.RotateAround(new Vector3(1,0,0), angle_1-pre_angle_x);
-		
+		if(targetID>0)
+		{
+			GameObject obj = GameObject.Find(target[targetID-1]);
+			if(obj != null)
+			{
+				transform.LookAt(obj.transform.position);
+			}
+		}
+			
 	}
 	
 	void SelectedMode() //highlight the selected lighted

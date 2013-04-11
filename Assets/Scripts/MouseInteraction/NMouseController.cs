@@ -103,6 +103,28 @@ public class NMouseController : MonoBehaviour {
 			if(clickedGmObj!=null)
 				clickedGmObj.SendMessage("OnMouseMode",4,SendMessageOptions.DontRequireReceiver);//object orientaion;
 		}
+		if(Input.GetKeyDown(KeyCode.Alpha0))
+		{
+			if(clickedGmObj!=null)
+				clickedGmObj.SendMessage("SetTargetID",0,SendMessageOptions.DontRequireReceiver);//object orientaion;
+		}
+		if(Input.GetKeyDown(KeyCode.Alpha1))
+		{
+			if(clickedGmObj!=null)
+				clickedGmObj.SendMessage("SetTargetID",1,SendMessageOptions.DontRequireReceiver);//object orientaion;
+		}
+		
+		if(Input.GetKeyDown(KeyCode.Alpha2))
+		{
+			if(clickedGmObj!=null)
+				clickedGmObj.SendMessage("SetTargetID",2,SendMessageOptions.DontRequireReceiver);//object orientaion;
+		}
+		
+		if(Input.GetKeyDown(KeyCode.Alpha3))
+		{
+			if(clickedGmObj!=null)
+				clickedGmObj.SendMessage("SetTargetID",3,SendMessageOptions.DontRequireReceiver);//object orientaion;
+		}
 	
 	}
 	
