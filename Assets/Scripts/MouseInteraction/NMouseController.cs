@@ -13,9 +13,10 @@ public class NMouseController : MonoBehaviour {
 
 	public string LightName = "NewSpotLight";
 	
-	public int InteractionMode;
+	public static int InteractionMode;
 	private bool lightSelect = false;
 	private float DELAY_CONST = 0.2f;
+	private GameObject preObj;
 	 
 	
 	// Use this for initialization
@@ -53,6 +54,7 @@ public class NMouseController : MonoBehaviour {
 		//left button down
 		if (Input.GetMouseButtonDown(rightHand))
 		{
+			preObj = clickedGmObj;
 			clickedGmObj = GetClickedGameObject();
 			
 			if(clickedGmObj != null)
@@ -62,16 +64,33 @@ public class NMouseController : MonoBehaviour {
 				{
 					clickedGmObj.SendMessage("OnMouseMode",1,SendMessageOptions.DontRequireReceiver);//translation mode
 					InteractionMode = 1;
+				}
+				else
+				{
+					if(preObj != null)
+					{
+						clickedGmObj.SendMessage("OnMouseMode",-1,SendMessageOptions.DontRequireReceiver);//translation mode
+						InteractionMode = -1;
+					}
+				}
+			}
+			else if(clickedGmObj == null)
+			{
+				if(preObj != null)
+				{
+					preObj.SendMessage("OnMouseMode",-1,SendMessageOptions.DontRequireReceiver);//translation mode
+					InteractionMode = -1;
 				}	
 			}
+			 
 		}
 		
 		else if(Input.GetMouseButtonUp(rightHand))
 		{
 			if(clickedGmObj != null)
 			{
-				clickedGmObj.SendMessage("OnMouseMode",-1,SendMessageOptions.DontRequireReceiver);//mouse deselected
-				InteractionMode = -1;
+				clickedGmObj.SendMessage("OnMouseMode",0,SendMessageOptions.DontRequireReceiver);//mouse deselected
+				InteractionMode = 0;
 			}
 		}
 		
@@ -93,13 +112,10 @@ public class NMouseController : MonoBehaviour {
 		{
 			if(clickedGmObj != null)
 			{
-				clickedGmObj.SendMessage("OnMouseMode",-1,SendMessageOptions.DontRequireReceiver);//mouse deselected
-				InteractionMode = -1;
+				clickedGmObj.SendMessage("OnMouseMode",0,SendMessageOptions.DontRequireReceiver);//mouse deselected
+				InteractionMode = 0;
 			}
 		}
-		
-		
-		
 		
 		if(InteractionMode ==1)
 		{
@@ -107,7 +123,7 @@ public class NMouseController : MonoBehaviour {
 			if (clickedGmObj != null)
         		clickedGmObj.SendMessage("TranslationZ", delta, SendMessageOptions.DontRequireReceiver);
 		}
-		else if(InteractionMode ==2)
+		else if(InteractionMode ==0)
 		{
 			float delta = Input.GetAxis("Mouse ScrollWheel");
 			if (clickedGmObj != null)

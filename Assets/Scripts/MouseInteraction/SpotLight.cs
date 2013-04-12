@@ -10,6 +10,8 @@ public class SpotLight : MonoBehaviour {
 	public string[] target = {"TargetCube-1","TargetCube-2","TargetCube-3"};
 	public int targetID = 0;
 	
+	public string LightName = "NewSpotLight";
+	
 	private float rotation_factor = 2.0f;
 	private float translation_factor = 1f; 
 	private Vector3 originia_position;
@@ -17,13 +19,15 @@ public class SpotLight : MonoBehaviour {
 	private float   original_intensity;
 	//private float   original_rotation = 0;
 	// Use this for initialization
-	
+	private int beam_id;
+	private static ContactPoint contact;
+	private GameObject occlisionObj;
 	
 	void Start () {
 		
 		originia_position = transform.position;
 		original_rotation = transform.rotation;	
-		original_intensity = GetIntensity();
+		original_intensity = GetIntensity(transform.gameObject);
 		
 		targetPosition = new Vector3(0,0,0);
 	
@@ -36,8 +40,6 @@ public class SpotLight : MonoBehaviour {
 		{
 			SelectedMode();
 			
-			
-			
 			if(MouseMode ==1) //translation
 			{
 				OnTragetMode();
@@ -47,7 +49,7 @@ public class SpotLight : MonoBehaviour {
 				Vector2 rot = new Vector2(0f,0f);
 				rot.x = Input.GetAxis("Mouse X")*rotation_factor;
 				rot.y = 0f-Input.GetAxis("Mouse Y")*rotation_factor;
-				transform.Rotate(rot.y, rot.x, 0, Space.World);
+				OnMouseRotation(rot);
 			}
 			 
 			 
@@ -68,6 +70,10 @@ public class SpotLight : MonoBehaviour {
 		targetID = id;
 	}
 	
+	void OnMouseRotation(Vector2 rot)
+	{
+		transform.Rotate(rot.y, rot.x, 0, Space.World);
+	}
 	
 	void TranslationZ(float values)
 	{
@@ -144,10 +150,10 @@ public class SpotLight : MonoBehaviour {
 	}
 	
 	
-	float GetIntensity()
+	float GetIntensity(GameObject obj)
 	{
 		Light []  children;
-		children = transform.gameObject.GetComponentsInChildren<Light>();
+		children = obj.GetComponentsInChildren<Light>();
         foreach (Light child in children) {
             if(child.name =="light")
 			{
@@ -169,4 +175,135 @@ public class SpotLight : MonoBehaviour {
 			}
         }
 	}
+	
+	float Presion(float num)
+	{
+		return Mathf.Round(num * 10) / 10;
+	}
+	
+	void OnGUI()
+	{
+		string label="";
+		int m_mode = 3;
+		GameObject gameobj =  null;
+		if(MouseController.MouseMode)
+		{
+			m_mode = NMouseController.InteractionMode;
+			gameobj = NMouseController.clickedGmObj;
+		}
+		if(m_mode ==1)
+			label ="Mode: Translation";
+		else if(m_mode ==2)
+			label ="Mode: Rotation";
+		else if(m_mode ==0)
+			label ="Mode: Selected";
+		
+		
+		
+		if(gameobj == transform.gameObject)
+		{
+			string info_pos ="Position X: " + Presion(transform.position.x).ToString() +" Y: " + Presion(transform.position.y).ToString() + " Z: "+Presion(transform.position.z).ToString(); 
+			string info_rot="";
+			Vector3 rot = transform.rotation.eulerAngles;
+			info_rot  ="Rotation X: " + Presion(rot.x).ToString() +" Y: " + Presion(rot.y).ToString() + " Z: "+Presion(rot.z).ToString(); 
+				
+			string info_intensity ="Intensity: "+Presion(GetIntensity(transform.gameObject));
+			//infoclickedGmObj.transform.position.x.ToString;
+			GUI.Label(new Rect(20,10,200,100),label);
+			GUI.Label(new Rect(20,20,200,100),info_pos);
+			GUI.Label(new Rect(20,30,200,100),info_rot);
+			GUI.Label(new Rect(20,40,200,100),info_intensity);
+			
+		}
+	}
+	
+	
+	void OnCollisionEnter(Collision collision)	
+	{
+		
+		print("Collided with " + collision.gameObject.name);
+		occlisionObj = collision.gameObject;
+		
+		
+		
+		if((collision.gameObject.name != LightName))
+		{
+			if(collision.gameObject.name=="struss-1")
+				beam_id = 1;
+			else if(collision.gameObject.name=="struss-2")
+				beam_id = 2;
+			else if(collision.gameObject.name=="struss-3")
+				beam_id = 3;
+			else if(collision.gameObject.name=="struss-4")
+				beam_id = 4;
+			else if(collision.gameObject.name=="struss-5")
+				beam_id = 5;
+			else if(collision.gameObject.name=="struss-6")
+				beam_id = 6;
+			else if(collision.gameObject.name=="struss-7")
+				beam_id = 7;
+			else if(collision.gameObject.name=="struss-8")
+				beam_id = 8;
+			else if(collision.gameObject.name=="struss-9")
+				beam_id = 9;	
+			else 
+			{
+				beam_id = -1;
+			}
+			
+			if(beam_id >0)
+			{
+				Color color = new Color(0.0f,0.8f,0.2f,0.7f);
+				Material material = new Material(Shader.Find("Transparent/Diffuse"));
+		        material.color = color;
+				collision.gameObject.renderer.material = material;
+				
+				
+				MouseController.occlision = beam_id;
+				contact = collision.contacts[0];
+			}
+			//BeamTranslation(beam_id);
+		}
+	}
+	
+	void OnCollisionExit(Collision collision) {
+        
+		occlisionObj = collision.gameObject;
+		
+		if((collision.gameObject.name != LightName))
+		{
+			if(collision.gameObject.name=="struss-1")
+				beam_id = 1;
+			else if(collision.gameObject.name=="struss-2")
+				beam_id = 2;
+			else if(collision.gameObject.name=="struss-3")
+				beam_id = 3;
+			else if(collision.gameObject.name=="struss-4")
+				beam_id = 4;
+			else if(collision.gameObject.name=="struss-5")
+				beam_id = 5;
+			else if(collision.gameObject.name=="struss-6")
+				beam_id = 6;
+			else if(collision.gameObject.name=="struss-7")
+				beam_id = 7;
+			else if(collision.gameObject.name=="struss-8")
+				beam_id = 8;
+			else if(collision.gameObject.name=="struss-9")
+				beam_id = 9;
+			else 
+			{
+				beam_id = -1;
+			}
+			
+			if(beam_id >0)
+			{
+				Color color = new Color(0.7f,0.7f,0.7f,1.0f);
+				Material material = new Material(Shader.Find("Transparent/Diffuse"));
+		        material.color = color;
+				collision.gameObject.renderer.material = material;
+				contact = collision.contacts[0];
+			}
+		}
+    }
+	
 }
