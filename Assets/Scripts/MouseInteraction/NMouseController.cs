@@ -12,6 +12,10 @@ public class NMouseController : MonoBehaviour {
 	
 
 	public string LightName = "NewSpotLight";
+	
+	public int InteractionMode;
+	private bool lightSelect = false;
+	private float DELAY_CONST = 0.2f;
 	 
 	
 	// Use this for initialization
@@ -46,7 +50,7 @@ public class NMouseController : MonoBehaviour {
 		if(RightHandMode == false)
 			rightHand = 1;
 		
-		
+		//left button down
 		if (Input.GetMouseButtonDown(rightHand))
 		{
 			clickedGmObj = GetClickedGameObject();
@@ -57,8 +61,8 @@ public class NMouseController : MonoBehaviour {
 				if(clickedGmObj.name.CompareTo(LightName) ==0)
 				{
 					clickedGmObj.SendMessage("OnMouseMode",1,SendMessageOptions.DontRequireReceiver);//translation mode
-				}
-					
+					InteractionMode = 1;
+				}	
 			}
 		}
 		
@@ -67,6 +71,7 @@ public class NMouseController : MonoBehaviour {
 			if(clickedGmObj != null)
 			{
 				clickedGmObj.SendMessage("OnMouseMode",-1,SendMessageOptions.DontRequireReceiver);//mouse deselected
+				InteractionMode = -1;
 			}
 		}
 		
@@ -78,6 +83,7 @@ public class NMouseController : MonoBehaviour {
 				if(clickedGmObj.name.CompareTo(LightName) ==0)
 				{
 					clickedGmObj.SendMessage("OnMouseMode",2,SendMessageOptions.DontRequireReceiver);//rotation mode
+					InteractionMode = 2;
 				}
 					
 			}
@@ -88,20 +94,33 @@ public class NMouseController : MonoBehaviour {
 			if(clickedGmObj != null)
 			{
 				clickedGmObj.SendMessage("OnMouseMode",-1,SendMessageOptions.DontRequireReceiver);//mouse deselected
+				InteractionMode = -1;
 			}
 		}
 		
+		
+		
+		
+		if(InteractionMode ==1)
+		{
+			float delta = Input.GetAxis("Mouse ScrollWheel");
+			if (clickedGmObj != null)
+        		clickedGmObj.SendMessage("TranslationZ", delta, SendMessageOptions.DontRequireReceiver);
+		}
+		else if(InteractionMode ==2)
+		{
+			float delta = Input.GetAxis("Mouse ScrollWheel");
+			if (clickedGmObj != null)
+        		clickedGmObj.SendMessage("SetIntensity", delta, SendMessageOptions.DontRequireReceiver);
+		}
+		
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////////
 		if (Input.GetKeyDown(KeyCode.A)) 
 		{
 			if(clickedGmObj!=null)
 				clickedGmObj.SendMessage("LightReset",null,SendMessageOptions.DontRequireReceiver);//reset
 				
-		}
-		
-		if(Input.GetKeyDown(KeyCode.B))
-		{
-			if(clickedGmObj!=null)
-				clickedGmObj.SendMessage("OnMouseMode",4,SendMessageOptions.DontRequireReceiver);//object orientaion;
 		}
 		if(Input.GetKeyDown(KeyCode.Alpha0))
 		{
@@ -127,7 +146,6 @@ public class NMouseController : MonoBehaviour {
 		}
 	
 	}
-	
-	 
+
 	
 }

@@ -11,6 +11,7 @@ public class SpotLight : MonoBehaviour {
 	public int targetID = 0;
 	
 	private float rotation_factor = 2.0f;
+	private float translation_factor = 1f; 
 	private Vector3 originia_position;
 	private Quaternion original_rotation;
 	private float   original_intensity;
@@ -35,9 +36,10 @@ public class SpotLight : MonoBehaviour {
 		{
 			SelectedMode();
 			
+			
+			
 			if(MouseMode ==1) //translation
 			{
-				//OnMouseTranslation();
 				OnTragetMode();
 			}
 			else if(MouseMode ==2)
@@ -47,19 +49,13 @@ public class SpotLight : MonoBehaviour {
 				rot.y = 0f-Input.GetAxis("Mouse Y")*rotation_factor;
 				transform.Rotate(rot.y, rot.x, 0, Space.World);
 			}
-			else 
-			{
-				OnTragetMode();
-			}
+			 
 			 
 		}
 		else
 		{
 			DeselectedMode();
 		}
-		
-//		print (transform.forward);
-	
 	}
 	
 	void OnMouseMode(int mode)
@@ -72,6 +68,13 @@ public class SpotLight : MonoBehaviour {
 		targetID = id;
 	}
 	
+	
+	void TranslationZ(float values)
+	{
+		Vector3 pos = transform.position;
+		pos.z += values*translation_factor;
+		transform.position = pos;
+	}
 	
 	void OnTragetMode()
 	{
@@ -162,7 +165,7 @@ public class SpotLight : MonoBehaviour {
         foreach (Light child in children) {
             if(child.name =="light")
 			{
-				child.intensity = values;
+				child.intensity += values;
 			}
         }
 	}
