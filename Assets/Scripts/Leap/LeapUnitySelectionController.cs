@@ -339,7 +339,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	
 	public void ClearFocus()
 	{
-		init_rot = false;
+		init_rot = true;
 		ActiveMode = "";
 		if( m_FocusedObject != null )
 		{

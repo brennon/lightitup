@@ -51,6 +51,10 @@ public class SpotLight : MonoBehaviour {
 				rot.y = 0f-Input.GetAxis("Mouse Y")*rotation_factor;
 				OnMouseRotation(rot);
 			}
+			else if(MouseMode == 4)
+			{
+				TranslationZZ();
+			}
 			 
 			 
 		}
@@ -98,6 +102,28 @@ public class SpotLight : MonoBehaviour {
 		Vector3 pos = transform.position;
 		pos.z += values*translation_factor;
 		transform.position = pos;
+	}
+	
+	void TranslationZZ()
+	{
+		
+		Vector3 pos = transform.position;
+		//pos.z += Input.GetAxis("Mouse X")*translation_factor;
+		//float tran_x = Input.GetAxis("Mouse X")*translation_factor;
+		float tran_y = Input.GetAxis("Mouse Y")*translation_factor*0.3f;
+		//pos.z += Mathf.Sqrt(tran_x*tran_x+ tran_y*tran_y);
+		if(pos.z<=-3.6f && tran_y<0.0f)
+		{
+			return;
+		}
+		else if(pos.z>=7.0 && tran_y>0.0f)
+		{
+			return;
+		}
+		
+		pos.z += tran_y;
+		transform.position = pos;
+		
 	}
 	
 	void OnTragetMode()

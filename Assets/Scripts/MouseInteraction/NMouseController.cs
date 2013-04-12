@@ -17,6 +17,9 @@ public class NMouseController : MonoBehaviour {
 	private bool lightSelect = false;
 	private float DELAY_CONST = 0.2f;
 	private GameObject preObj;
+	private bool leftClicked = false;
+	private bool doubleClicked = false;
+	private bool rightClicked = false;
 	 
 	
 	// Use this for initialization
@@ -57,7 +60,31 @@ public class NMouseController : MonoBehaviour {
 			preObj = clickedGmObj;
 			clickedGmObj = GetClickedGameObject();
 			
-			if(clickedGmObj != null)
+			if(leftClicked == false)
+				leftClicked = true;
+			else if(doubleClicked == false)
+			{
+				doubleClicked = true;
+				if(clickedGmObj != false)
+				{
+					clickedGmObj.SendMessage("OnMouseMode",4,SendMessageOptions.DontRequireReceiver);//translation mode
+					InteractionMode = 4;
+				}		
+			}
+			
+			
+			
+			if(rightClicked == true && doubleClicked == false)
+			{
+				if(clickedGmObj != null)
+				{
+					clickedGmObj.SendMessage("OnMouseMode", 4, SendMessageOptions.DontRequireReceiver);
+					doubleClicked = true;
+					InteractionMode = 4;
+				}
+			}
+			
+			if(clickedGmObj != null && doubleClicked == false)
 			{ 
 				print (clickedGmObj.name);
 				if(clickedGmObj.name.CompareTo(LightName) ==0)
@@ -87,6 +114,9 @@ public class NMouseController : MonoBehaviour {
 		
 		else if(Input.GetMouseButtonUp(rightHand))
 		{
+			leftClicked = false;
+			doubleClicked = false;
+			rightClicked = false;
 			if(clickedGmObj != null)
 			{
 				clickedGmObj.SendMessage("OnMouseMode",0,SendMessageOptions.DontRequireReceiver);//mouse deselected
@@ -96,20 +126,48 @@ public class NMouseController : MonoBehaviour {
 		
 		else if(Input.GetMouseButtonDown(1-rightHand))
 		{
-			clickedGmObj = GetClickedGameObject();
-			if(clickedGmObj != null)
-			{ 
-				if(clickedGmObj.name.CompareTo(LightName) ==0)
+			if(leftClicked == true && doubleClicked == false)
+			{
+				if(clickedGmObj != null)
 				{
-					clickedGmObj.SendMessage("OnMouseMode",2,SendMessageOptions.DontRequireReceiver);//rotation mode
-					InteractionMode = 2;
+					clickedGmObj.SendMessage("OnMouseMode", 4, SendMessageOptions.DontRequireReceiver);
+					doubleClicked = true;
+					InteractionMode = 4;
 				}
-					
 			}
+			
+			if(rightClicked == false)
+				rightClicked = true;
+			else if(doubleClicked == false)
+			{
+				doubleClicked = true;
+				if(clickedGmObj != false)
+				{
+					clickedGmObj.SendMessage("OnMouseMode",4,SendMessageOptions.DontRequireReceiver);//translation mode
+					InteractionMode = 4;
+				}		
+			}
+			
+			
+		
+				clickedGmObj = GetClickedGameObject();
+				if(clickedGmObj != null && doubleClicked == false)
+				{ 
+					if(clickedGmObj.name.CompareTo(LightName) ==0)
+					{
+						clickedGmObj.SendMessage("OnMouseMode",2,SendMessageOptions.DontRequireReceiver);//rotation mode
+						InteractionMode = 2;
+					}			
+				}
+			
 		}
 		
 		else if(Input.GetMouseButtonUp(1-rightHand))
 		{
+			doubleClicked = false;
+			leftClicked = false;
+			rightClicked = false;
+			
 			if(clickedGmObj != null)
 			{
 				clickedGmObj.SendMessage("OnMouseMode",0,SendMessageOptions.DontRequireReceiver);//mouse deselected
