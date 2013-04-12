@@ -218,6 +218,10 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	
 	void Update()
 	{
+		//Leave object down on SPACE pressed
+		if (Input.GetKeyDown(KeyCode.Space))
+			ClearFocus();
+		
 		Leap.Frame thisFrame = LeapInput.Frame;
 		if( thisFrame == null ) 
 			return;
@@ -259,7 +263,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 			//End selection if we don't see any fingers or the scaling factor is going down quickly ( indicating we are making a fist )
 			if( CheckEndSelection(thisFrame) )
 			{
-				ActiveMode = "";
+				
 				ClearFocus();
 			}
 			else
@@ -333,6 +337,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	
 	public void ClearFocus()
 	{
+		ActiveMode = "";
 		if( m_FocusedObject != null )
 		{
 			m_FocusedObject.SendMessage("OnMouseSelected", false, SendMessageOptions.DontRequireReceiver);
@@ -384,6 +389,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	
 	void Start()
 	{
+		print (ExperimentManager.instance.currentTask);
 //		m_HighlightMaterial = Resources.Load("Materials/Highlight") as Material;
 		
 		init_rot = true;
@@ -401,8 +407,8 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	protected float m_FirstTouchedTime = 0.0f;
 	protected float m_LastMovedTime = 0.0f;
 	
-	protected const float kSelectionTime = .25f;		// wait for how long until object is selected/deselected (transition time)
-	protected const float kIdleStartDeselectTime = 3f;	// how long does it have to be idle before starting deselection
+	protected const float kSelectionTime = 0f;		// wait for how long until object is selected/deselected (transition time)
+	protected const float kIdleStartDeselectTime = 300f;	// how long does it have to be idle before starting deselection
 	protected const float kMinSelectionTime = 2.0f;		// minimum time an object can be selected
 	protected const float kMovementThreshold = 2.0f;	// minimum translation before it is considered idle (counting from m_LastMovedTime)
 	protected Color kBlankColor = new Color(1,0,0,1);	// color during selection/deselection period
