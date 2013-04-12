@@ -174,4 +174,24 @@ public class ExperimentManager : MonoBehaviour {
 		Debug.Log ("position: " + spotlight.transform.localPosition);
 		Debug.Log ("rotation: " + light.transform.localRotation);
 	}
+	
+	private void Update() {
+		CheckForKeyUps();
+	}
+	
+	private void CheckForKeyUps() {
+		if (Input.GetKeyUp(KeyCode.Alpha1)) {
+			currentDevice = Device.Leap;
+			currentTask = Task.TranslationRotation;
+		} else if (Input.GetKeyUp(KeyCode.Alpha2)) {
+			currentDevice = Device.Leap;
+			currentTask = Task.TranslationIntensity;
+		} else if (Input.GetKeyUp(KeyCode.Alpha3)) {
+			currentDevice = Device.Mouse;
+			currentTask = Task.TranslationRotation;
+		} else if (Input.GetKeyUp(KeyCode.Alpha4)) {
+			currentDevice = Device.Mouse;
+			currentTask = Task.TranslationIntensity;
+		}
+	}
 }
