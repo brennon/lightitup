@@ -62,6 +62,19 @@ public class SpotLight : MonoBehaviour {
 		{
 			DeselectedMode();
 		}
+		
+		if (Input.GetKey(KeyCode.P)) {
+			Debug.Log ("rotating, targetID: "+targetID);
+			if(targetID>0)
+			{
+				GameObject obj = GameObject.Find(target[targetID-1]);
+				Debug.Log (obj);
+				if(obj != null)
+				{
+					transform.LookAt(obj.transform.position);
+				}
+			}
+		}
 	}
 	
 	void OnMouseMode(int mode)
