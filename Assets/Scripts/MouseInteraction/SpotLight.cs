@@ -58,7 +58,7 @@ public class SpotLight : MonoBehaviour {
 			DeselectedMode();
 		}
 		
-		print (transform.forward);
+//		print (transform.forward);
 	
 	}
 	
