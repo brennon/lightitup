@@ -106,6 +106,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	
 	public virtual void DoRotation(Frame thisFrame)
 	{
+		print ("INIT:"+init_rot);
 		bool init = false;
 		if (ActiveMode != "Rotating") {
 			ActiveMode = "Rotating";
@@ -194,7 +195,8 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		{
 			float lastDist = lastVec.magnitude;
 			float currDist = currVec.magnitude;
-			float scale = Mathf.Clamp((currDist-lastDist)*2, -.1f, .1f);
+			float scale = Mathf.Clamp((currDist-lastDist)*5, -.3f, .3f);
+//			print ("VALUE: "+ scale);
 			m_FocusedObject.SendMessage("OnIntensity", scale, SendMessageOptions.DontRequireReceiver);
 		}
 	}
@@ -337,10 +339,11 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	
 	public void ClearFocus()
 	{
+		init_rot = false;
 		ActiveMode = "";
 		if( m_FocusedObject != null )
 		{
-			m_FocusedObject.SendMessage("OnMouseSelected", false, SendMessageOptions.DontRequireReceiver);
+			m_FocusedObject.SendMessage("OnLeapSelected", false, SendMessageOptions.DontRequireReceiver);
 //			List<Material> materials = new List<Material>( m_FocusedObject.renderer.materials );
 //			Material removeMaterial = materials.Find( m => m.name == m_HighlightMaterial.name + " (Instance)" );
 //			materials.Remove(removeMaterial);
@@ -366,7 +369,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 //		newMaterial.color = new Color(0,0,0,0);
 //		materials.Add(newMaterial);
 //		focus.renderer.materials = materials.ToArray();
-		focus.SendMessage("OnMouseSelected", true, SendMessageOptions.DontRequireReceiver);
+		focus.SendMessage("OnLeapSelected", true, SendMessageOptions.DontRequireReceiver);
 	}
 	
 	public void SetHighlightColor(Color c)
@@ -389,7 +392,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	
 	void Start()
 	{
-		print (ExperimentManager.instance.currentTask);
+//		print (ExperimentManager.instance.currentTask);
 //		m_HighlightMaterial = Resources.Load("Materials/Highlight") as Material;
 		
 		init_rot = true;

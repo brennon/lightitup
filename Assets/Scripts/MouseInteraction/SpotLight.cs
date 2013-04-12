@@ -72,7 +72,25 @@ public class SpotLight : MonoBehaviour {
 	
 	void OnMouseRotation(Vector2 rot)
 	{
-		transform.Rotate(rot.y, rot.x, 0, Space.World);
+		//transform.Rotate(rot.y, rot.x, 0, Space.World);
+		Quaternion angles  = transform.rotation;
+		Quaternion angles_x = Quaternion.AngleAxis(rot.y, new Vector3(1,0,0));
+		Quaternion angles_y = Quaternion.AngleAxis(rot.x, new Vector3(0,1,0));
+		
+		angles = angles*angles_x*angles_y;
+		//angles.z = 0;
+		float sum  = angles.x*angles.x + angles.y*angles.y + angles.z*angles.z + angles.w*angles.w;
+		
+		sum = Mathf.Sqrt(sum);
+		angles.x = angles.x /sum;
+		angles.y = angles.y/sum;
+		angles.z = angles.z/sum;
+		angles.w = angles.w/sum;
+		Vector3 euler_angle = angles.eulerAngles;
+		euler_angle.z = 0.0f;
+		angles = Quaternion.Euler(euler_angle);
+		transform.rotation = angles;
+		
 	}
 	
 	void TranslationZ(float values)
@@ -164,6 +182,14 @@ public class SpotLight : MonoBehaviour {
 		 
 	}
 	
+	void OnLeapSelected(bool selected)
+	{
+		if(selected == true)
+			MouseMode = 0;
+		else 
+			MouseMode = -1;
+	}
+	
 	void SetIntensity(float values)
 	{
 		Light []  children;
@@ -172,6 +198,20 @@ public class SpotLight : MonoBehaviour {
             if(child.name =="light")
 			{
 				child.intensity += values;
+			}
+        }
+	}
+	
+		void OnIntensity(float values)
+	{
+		Light []  children;
+		children = gameObject.GetComponentsInChildren<Light>();
+        foreach (Light child in children) {
+            if(child.name =="light")
+			{
+//				print ("value: "+values);
+				child.intensity += values;
+				break;
 			}
         }
 	}

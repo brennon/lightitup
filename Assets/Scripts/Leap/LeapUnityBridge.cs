@@ -111,12 +111,12 @@ public class LeapUnityBridge : MonoBehaviour
 			LeapInput.EnableScaling = !LeapInput.EnableScaling;
 			print ("Intensity: "+LeapInput.EnableScaling);
 		}
-		if (Input.GetKeyDown(KeyCode.Alpha0))
-			LeapInput.ChangeMode(0);
-		if (Input.GetKeyDown(KeyCode.Alpha1))
-			LeapInput.ChangeMode(1);
-		if (Input.GetKeyDown(KeyCode.Alpha5))
-			LeapInput.ChangeMode(-1);	// No Leap Input
+//		if (Input.GetKeyDown(KeyCode.Alpha0))
+//			LeapInput.ChangeMode(0);
+//		if (Input.GetKeyDown(KeyCode.Alpha1))
+//			LeapInput.ChangeMode(1);
+//		if (Input.GetKeyDown(KeyCode.Alpha5))
+//			LeapInput.ChangeMode(-1);	// No Leap Input
 		
 	}
 	

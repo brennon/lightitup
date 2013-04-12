@@ -180,18 +180,28 @@ public class ExperimentManager : MonoBehaviour {
 	}
 	
 	private void CheckForKeyUps() {
+		bool changeLeap = false;
 		if (Input.GetKeyUp(KeyCode.Alpha1)) {
 			currentDevice = Device.Leap;
 			currentTask = Task.TranslationRotation;
+			changeLeap = true;
 		} else if (Input.GetKeyUp(KeyCode.Alpha2)) {
 			currentDevice = Device.Leap;
 			currentTask = Task.TranslationIntensity;
+			changeLeap = true;
 		} else if (Input.GetKeyUp(KeyCode.Alpha3)) {
 			currentDevice = Device.Mouse;
 			currentTask = Task.TranslationRotation;
+			changeLeap = true;
 		} else if (Input.GetKeyUp(KeyCode.Alpha4)) {
 			currentDevice = Device.Mouse;
 			currentTask = Task.TranslationIntensity;
+			changeLeap = true;
+		}
+		if (changeLeap) {
+			int leapMode = currentTask == Task.TranslationRotation ? 0 : 1;
+			LeapInput.ChangeMode(currentDevice == Device.Leap ? leapMode : -5);
+			changeLeap = false;
 		}
 	}
 }
