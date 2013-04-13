@@ -181,19 +181,19 @@ public class ExperimentManager : MonoBehaviour {
 	
 	private void CheckForKeyUps() {
 		bool changeLeap = false;
-		if (Input.GetKeyUp(KeyCode.Alpha1)) {
+		if (Input.GetKeyUp(KeyCode.Z)) {
 			currentDevice = Device.Leap;
 			currentTask = Task.TranslationRotation;
 			changeLeap = true;
-		} else if (Input.GetKeyUp(KeyCode.Alpha2)) {
+		} else if (Input.GetKeyUp(KeyCode.X)) {
 			currentDevice = Device.Leap;
 			currentTask = Task.TranslationIntensity;
 			changeLeap = true;
-		} else if (Input.GetKeyUp(KeyCode.Alpha3)) {
+		} else if (Input.GetKeyUp(KeyCode.C)) {
 			currentDevice = Device.Mouse;
 			currentTask = Task.TranslationRotation;
 			changeLeap = true;
-		} else if (Input.GetKeyUp(KeyCode.Alpha4)) {
+		} else if (Input.GetKeyUp(KeyCode.V)) {
 			currentDevice = Device.Mouse;
 			currentTask = Task.TranslationIntensity;
 			changeLeap = true;
