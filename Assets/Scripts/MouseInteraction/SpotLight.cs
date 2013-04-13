@@ -1,6 +1,10 @@
 using UnityEngine;
 using System.Collections;
 using System.Threading;
+using System;
+using System.IO;
+using System.Collections.Generic;
+
 
 public class SpotLight : MonoBehaviour {
 	
@@ -11,6 +15,11 @@ public class SpotLight : MonoBehaviour {
 	public int targetID = 0;
 	
 	public string LightName = "NewSpotLight";
+	
+	public static List<float> time_span = new List<float>();
+	public static List<string> mode_list = new List<string> ();
+	public static int times= 0;
+	
 	
 	private float rotation_factor = 2.0f;
 	private float translation_factor = 1f; 
@@ -23,6 +32,9 @@ public class SpotLight : MonoBehaviour {
 	private static ContactPoint contact;
 	private GameObject occlisionObj;
 	
+	private static float begin_time;
+	private static float end_time;
+	
 	void Start () {
 		
 		originia_position = transform.position;
@@ -30,6 +42,10 @@ public class SpotLight : MonoBehaviour {
 		original_intensity = GetIntensity(transform.gameObject);
 		
 		targetPosition = new Vector3(0,0,0);
+		
+		//begin_time  =  end_time = -1.0f;
+		begin_time = Time.time;
+		
 	
 	}
 	
@@ -80,6 +96,28 @@ public class SpotLight : MonoBehaviour {
 	void OnMouseMode(int mode)
 	{
 		MouseMode = mode;
+		
+			
+		if(mode == 2)
+		{
+			print("!!!!!!!!!!!!!!!!!!!!!!!!");
+			times++;
+			end_time = Time.time;
+			mode_list.Add("Translation_Rotation");
+			time_span.Add(end_time - begin_time);
+			begin_time = Time.time;
+		}
+		else if(mode == 1)
+		{
+			print("~~~~~~~~~~~~~~~~~~~");
+			times++;
+			end_time = Time.time;
+			mode_list.Add("Translation_Intensity");
+			time_span.Add(end_time - begin_time);
+			end_time = Time.time;
+		}
+		
+		
 	}
 	
 	void SetTargetID(int id)
@@ -169,6 +207,13 @@ public class SpotLight : MonoBehaviour {
 				break;
 			}
         }
+	}
+	
+	 void PrintTime()
+	{
+		print ("Times :"+times);
+		for (int i=0;i<times;i++)
+			print (mode_list[i] + " time:"+time_span[i]);
 	}
 	
 	void DeselectedMode()

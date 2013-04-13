@@ -3,12 +3,14 @@ using System.Collections;
 using System;
 using System.IO;
 
+
 public class NMouseController : MonoBehaviour {
 	
 	public int taskMode; // This is the mode being set in each trial by the ExperimentManager
 	public static GameObject clickedGmObj = null;
-	public static bool MouseMode = true;
-	public bool RightHandUser = true;
+	//public static bool MouseMode = true;
+	//public bool RightHandUser = true;
+	//public  List<float> integers = new List<float>();
 	
 
 	public string LightName = "NewSpotLight";
@@ -24,14 +26,24 @@ public class NMouseController : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+
 	
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
-		  if(MouseMode)
+		if(ExperimentManager.instance.currentDevice == ExperimentManager.Device.Mouse)
+		{
+			//Handedness
+			bool RightHandUser = true;
+			if(ExperimentManager.instance.handedness == ExperimentManager.Handedness.Right)
+				RightHandUser = false;
+			else
+				RightHandUser = true;
+			
 			Mouse_Interaction(RightHandUser);
+		}
 	}
 	
 	GameObject GetClickedGameObject()
@@ -217,6 +229,12 @@ public class NMouseController : MonoBehaviour {
 		{
 			if(clickedGmObj!=null)
 				clickedGmObj.SendMessage("SetTargetID",3,SendMessageOptions.DontRequireReceiver);//object orientaion;
+		}
+		
+		if(Input.GetKeyDown(KeyCode.Alpha4))
+		{
+			if(clickedGmObj!=null)
+				clickedGmObj.SendMessage("PrintTime",null,SendMessageOptions.DontRequireReceiver);//object orientaion;
 		}
 	
 	}
