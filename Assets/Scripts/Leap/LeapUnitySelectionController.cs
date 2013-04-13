@@ -106,7 +106,6 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	
 	public virtual void DoRotation(Frame thisFrame)
 	{
-		print ("INIT:"+init_rot);
 		bool init = false;
 		if (ActiveMode != "Rotating") {
 			ActiveMode = "Rotating";
@@ -390,9 +389,20 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		
 	}
 	
-	void Start()
+	
+	
+	void OnLevelWasLoaded()
 	{
-//		print (ExperimentManager.instance.currentTask);
+		//Check if the Leap should be active and set the interaction mode accordingly
+		if (ExperimentManager.instance.currentDevice == ExperimentManager.Device.Leap) {
+			if (ExperimentManager.instance.currentTask == ExperimentManager.Task.TranslationRotation) {
+				LeapInput.ChangeMode(0); }
+			else {
+				LeapInput.ChangeMode(1); }
+		}
+		else {
+			LeapInput.ChangeMode(-1);	//Deactivate the Leap
+		}
 //		m_HighlightMaterial = Resources.Load("Materials/Highlight") as Material;
 		
 		init_rot = true;

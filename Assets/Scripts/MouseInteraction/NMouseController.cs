@@ -42,6 +42,14 @@ public class NMouseController : MonoBehaviour {
 			else
 				RightHandUser = true;
 			
+			if(ExperimentManager.instance.currentTask == ExperimentManager.Task.TranslationRotation)
+				SpotLight.InteractionMode = 1;
+			else if(ExperimentManager.instance.currentTask == ExperimentManager.Task.TranslationIntensity)
+			{
+				SpotLight.InteractionMode = 2;
+				SpotLight.targetPosition = ExperimentManager.instance.currentLightTarget;
+			}
+			
 			Mouse_Interaction(RightHandUser);
 		}
 	}
@@ -98,7 +106,7 @@ public class NMouseController : MonoBehaviour {
 			
 			if(clickedGmObj != null && doubleClicked == false)
 			{ 
-				print (clickedGmObj.name);
+				//print (clickedGmObj.name);
 				if(clickedGmObj.name.CompareTo(LightName) ==0)
 				{
 					clickedGmObj.SendMessage("OnMouseMode",1,SendMessageOptions.DontRequireReceiver);//translation mode
@@ -131,8 +139,8 @@ public class NMouseController : MonoBehaviour {
 			rightClicked = false;
 			if(clickedGmObj != null)
 			{
-				clickedGmObj.SendMessage("OnMouseMode",0,SendMessageOptions.DontRequireReceiver);//mouse deselected
-				InteractionMode = 0;
+				clickedGmObj.SendMessage("OnMouseMode",-1,SendMessageOptions.DontRequireReceiver);//mouse deselected
+				InteractionMode = -1;
 			}
 		}
 		
@@ -160,8 +168,6 @@ public class NMouseController : MonoBehaviour {
 				}		
 			}
 			
-			
-		
 				clickedGmObj = GetClickedGameObject();
 				if(clickedGmObj != null && doubleClicked == false)
 				{ 
@@ -182,18 +188,19 @@ public class NMouseController : MonoBehaviour {
 			
 			if(clickedGmObj != null)
 			{
-				clickedGmObj.SendMessage("OnMouseMode",0,SendMessageOptions.DontRequireReceiver);//mouse deselected
-				InteractionMode = 0;
+				clickedGmObj.SendMessage("OnMouseMode",-1,SendMessageOptions.DontRequireReceiver);//mouse deselected
+				InteractionMode = -1;
 			}
 		}
-		
+		/*
 		if(InteractionMode ==1)
 		{
 			float delta = Input.GetAxis("Mouse ScrollWheel");
 			if (clickedGmObj != null)
         		clickedGmObj.SendMessage("TranslationZ", delta, SendMessageOptions.DontRequireReceiver);
 		}
-		else if(InteractionMode ==0)
+		*/
+		else if(SpotLight.InteractionMode ==2 && InteractionMode ==1)//Translation and intensity
 		{
 			float delta = Input.GetAxis("Mouse ScrollWheel");
 			if (clickedGmObj != null)
@@ -208,6 +215,7 @@ public class NMouseController : MonoBehaviour {
 				clickedGmObj.SendMessage("LightReset",null,SendMessageOptions.DontRequireReceiver);//reset
 				
 		}
+		/*
 		if(Input.GetKeyDown(KeyCode.Alpha0))
 		{
 			if(clickedGmObj!=null)
@@ -236,6 +244,7 @@ public class NMouseController : MonoBehaviour {
 			if(clickedGmObj!=null)
 				clickedGmObj.SendMessage("PrintTime",null,SendMessageOptions.DontRequireReceiver);//object orientaion;
 		}
+		*/
 	
 	}
 

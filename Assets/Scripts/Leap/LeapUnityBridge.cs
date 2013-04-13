@@ -45,43 +45,51 @@ public class LeapUnityBridge : MonoBehaviour
 	void Awake()
 	{
 		// If a LeapUnityBridge has already been instantiated
-		if( m_Created )
+		if( !m_Created )
 		{
+			print ("Don't destroy this LEAP Controller");
+			DontDestroyOnLoad(this.gameObject);
+			m_Created = true;
+		
+			// Set the scaling and offset values in UnityVectorExtension with
+			// those set above
+			Leap.UnityVectorExtension.InputScale = m_LeapScaling;
+			Leap.UnityVectorExtension.InputOffset = m_LeapOffset;
+		
+			// Ensure that m_FingerTemplate is set in the Unity inspector
+			if( !m_FingerTemplate )
+			{
+				Debug.LogError("No Finger template set!");
+				return;
+			}
+		
+			// Ensure that m_PalmTemplate is set in the Unity inspector
+			if( !m_PalmTemplate )
+			{
+				Debug.LogError("No Palm template set!");
+				return;
+			}
+		
+			// If no exceptions have been thrown, create an internal representation
+			// of the user's hands
+			CreateSceneHands();
 			// Throw an exception
-			throw new UnityException("A LeapUnityBridge has already been created!");
+//			throw new UnityException("A LeapUnityBridge has already been created!");		
 		}
-		m_Created = true;
-		
-		// Set the scaling and offset values in UnityVectorExtension with
-		// those set above
-		Leap.UnityVectorExtension.InputScale = m_LeapScaling;
-		Leap.UnityVectorExtension.InputOffset = m_LeapOffset;
-		
-		// Ensure that m_FingerTemplate is set in the Unity inspector
-		if( !m_FingerTemplate )
-		{
-			Debug.LogError("No Finger template set!");
-			return;
+		else {
+			print ("DESTROYYY "+this.gameObject.name);
+			Destroy(this.gameObject);
 		}
 		
-		// Ensure that m_PalmTemplate is set in the Unity inspector
-		if( !m_PalmTemplate )
-		{
-			Debug.LogError("No Palm template set!");
-			return;
-		}
-		
-		// If no exceptions have been thrown, create an internal representation
-		// of the user's hands
-		CreateSceneHands();
 	}
 	
 	// OnDestroy is called when the MonoBehaviour will be destroyed.
 	void OnDestroy()
 	{
 		// State that there is no longer an active LeapUnityBridge
-		m_Created = false;	
+//		m_Created = false;	
 	}
+	
 	
 	// Call Update in LeapInput
 	// This gets the current frame and fires the appropriate events
@@ -158,18 +166,21 @@ public class LeapUnityBridge : MonoBehaviour
 		for( int i = 0; i < behavior.m_hands.Length; i++ )
 		{
 			behavior.m_hands[i] = CreateHand(hands, i);	
+			DontDestroyOnLoad(behavior.m_hands[i]);
 		}
 		
 		// Create each Finger and add it to the m_fingers array
 		for( int i = 0; i < behavior.m_fingers.Length; i++ )
 		{
 			behavior.m_fingers[i] = CreateFinger(behavior.m_hands[2], i);
+			DontDestroyOnLoad(behavior.m_fingers[i]);
 		}
 		
 		// Create each Palm and add it to the m_palms array
 		for( int i = 0; i < behavior.m_palms.Length; i++ )
 		{
-			behavior.m_palms[i] = CreatePalm(behavior.m_hands[2], i);	
+			behavior.m_palms[i] = CreatePalm(behavior.m_hands[2], i);
+			DontDestroyOnLoad(behavior.m_palms[i]);
 		}
 		
 		// Get all GameObjects in the scene with the "FingerTip" tag

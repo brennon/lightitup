@@ -9,17 +9,18 @@ using System.Collections.Generic;
 public class SpotLight : MonoBehaviour {
 	
 	public int  MouseMode = -1;
-	public Vector3 targetPosition;
+	public static Vector3 targetPosition;
+	public static int InteractionMode;
 	
-	public string[] target = {"TargetCube-1","TargetCube-2","TargetCube-3"};
-	public int targetID = 0;
+	//public string[] target = {"TargetCube-1","TargetCube-2","TargetCube-3"};
+	//public int targetID = 0;
 	
 	public string LightName = "NewSpotLight";
 	
-	public static List<float> time_span = new List<float>();
-	public static List<string> mode_list = new List<string> ();
-	public static int times= 0;
-	
+	//public static List<float> time_span = new List<float>();
+	//public static List<string> mode_list = new List<string> ();
+	//public static int times= 0;
+	public static double selectedTime;
 	
 	private float rotation_factor = 2.0f;
 	private float translation_factor = 1f; 
@@ -54,75 +55,49 @@ public class SpotLight : MonoBehaviour {
 		
 		if(MouseMode>=0) // light is selected
 		{
+			selectedTime += Time.deltaTime;
 			SelectedMode();
 			
-			if(MouseMode ==1) //translation
+			if(InteractionMode ==1) //translation and rotation
 			{
+				if(MouseMode ==1)//translation
+					OnMouseTranslation();
+				else if(MouseMode ==2)
+				{
+					Vector2 rot = new Vector2(0f,0f);
+					rot.x = Input.GetAxis("Mouse X")*rotation_factor;
+					rot.y = 0f-Input.GetAxis("Mouse Y")*rotation_factor;
+					OnMouseRotation(rot);
+				}
+				else if(MouseMode ==4)
+					TranslationZZ();
+					
+			}
+			
+			else if(InteractionMode ==2)//translation and intensity
+			{
+				if(MouseMode ==1)//translation
+					OnMouseTranslation();
+				else if(MouseMode ==4)
+					TranslationZZ();
 				OnTragetMode();
-			}
-			else if(MouseMode ==2)
-			{
-				Vector2 rot = new Vector2(0f,0f);
-				rot.x = Input.GetAxis("Mouse X")*rotation_factor;
-				rot.y = 0f-Input.GetAxis("Mouse Y")*rotation_factor;
-				OnMouseRotation(rot);
-			}
-			else if(MouseMode == 4)
-			{
-				TranslationZZ();
-			}
-			 
-			 
+			}	 
 		}
 		else
 		{
 			DeselectedMode();
 		}
-		
-		if (Input.GetKey(KeyCode.P)) {
-			Debug.Log ("rotating, targetID: "+targetID);
-			if(targetID>0)
-			{
-				GameObject obj = GameObject.Find(target[targetID-1]);
-				Debug.Log (obj);
-				if(obj != null)
-				{
-					transform.LookAt(obj.transform.position);
-				}
-			}
-		}
 	}
 	
 	void OnMouseMode(int mode)
 	{
-		MouseMode = mode;
-		
-			
-		if(mode == 2)
-		{
-			print("!!!!!!!!!!!!!!!!!!!!!!!!");
-			times++;
-			end_time = Time.time;
-			mode_list.Add("Translation_Rotation");
-			time_span.Add(end_time - begin_time);
-			begin_time = Time.time;
-		}
-		else if(mode == 1)
-		{
-			print("~~~~~~~~~~~~~~~~~~~");
-			times++;
-			end_time = Time.time;
-			mode_list.Add("Translation_Intensity");
-			time_span.Add(end_time - begin_time);
-			end_time = Time.time;
-		}
-		
+		MouseMode = mode;	
 		
 	}
 	
-	void SetTargetID(int id)
+	void OnLevelWasLoaded()
 	{
-		targetID = id;
+		selectedTime = 0;
 	}
 	
 	void OnMouseRotation(Vector2 rot)
@@ -179,17 +154,7 @@ public class SpotLight : MonoBehaviour {
 	
 	void OnTragetMode()
 	{
-		OnMouseTranslation();
-		
-		if(targetID>0)
-		{
-			GameObject obj = GameObject.Find(target[targetID-1]);
-			if(obj != null)
-			{
-				transform.LookAt(obj.transform.position);
-			}
-		}
-			
+		transform.LookAt(targetPosition);	
 	}
 	
 	void SelectedMode() //highlight the selected lighted
@@ -209,12 +174,7 @@ public class SpotLight : MonoBehaviour {
         }
 	}
 	
-	 void PrintTime()
-	{
-		print ("Times :"+times);
-		for (int i=0;i<times;i++)
-			print (mode_list[i] + " time:"+time_span[i]);
-	}
+	
 	
 	void DeselectedMode()
 	{
@@ -305,6 +265,7 @@ public class SpotLight : MonoBehaviour {
 		return Mathf.Round(num * 10) / 10;
 	}
 	
+	/*
 	void OnGUI()
 	{
 		string label="";
@@ -340,6 +301,7 @@ public class SpotLight : MonoBehaviour {
 			
 		}
 	}
+	*/
 	
 	
 	void OnCollisionEnter(Collision collision)	
