@@ -77,10 +77,16 @@ public class SpotLight : MonoBehaviour {
 			else if(InteractionMode ==2)//translation and intensity
 			{
 				if(MouseMode ==1)//translation
+				{
 					OnMouseTranslation();
+					OnTragetMode();
+				}
 				else if(MouseMode ==4)
+				{
 					TranslationZZ();
-				OnTragetMode();
+					OnTragetMode();
+				}
+				
 			}	 
 		}
 		else

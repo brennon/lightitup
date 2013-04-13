@@ -140,23 +140,11 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		
 	}
 	
-	public virtual void DoRotation_Absolute(Frame thisFrame)
+	public virtual void DoAutoRotation(Frame thisFrame)
 	{
-		// Set the mode if not previously set
-		if (ActiveMode != "Rotating") {
-			ActiveMode = "Rotating";
-		}
+		// Call the function to auto rotate the light
+		m_FocusedObject.SendMessage("OnTragetMode", SendMessageOptions.DontRequireReceiver);
 		
-		Vector3 vFingerDir = LeapUnityHandController.point.Direction.ToUnity();
-//		Vector3 vFingerPos = LeapUnityHandController.point.TipPosition.ToUnityTranslated();
-		float offsetY = Vector3.Angle(Vector3.up, vFingerDir);
-		float offsetX = Vector3.Angle(Vector3.right, vFingerDir);
-		float pitch = offsetY.ToUnityPitch();
-		float yaw = offsetX.ToUnityYaw();
-		Vector2 rotation = new Vector2(pitch,yaw);//new Vector2 ((float)(pitch/360f*Math.PI), (float)(yaw/360f*Math.PI));
-		m_FocusedObject.SendMessage("OnMouseRotation", rotation, SendMessageOptions.DontRequireReceiver);
-		print ("Rotating by: "+rotation);
-//		m_FocusedObject.transform.RotateAroundLocal(new Vector3(0,1,0),yaw);
 	}
 	
 	public virtual void DoRotation_old(Frame thisFrame)
@@ -280,6 +268,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 				if( CheckShouldScale(thisFrame) )
 				{
 					DoScaling(thisFrame);
+					DoAutoRotation(thisFrame);
 				}
 			}
 		}
