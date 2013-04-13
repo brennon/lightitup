@@ -209,7 +209,7 @@ public class SpotLight1 : MonoBehaviour {
 	void OnCollisionEnter(Collision collision)	
 	{
 		
-		Debug.Log("Collided with " + collision.gameObject.name);
+		// Debug.Log("Collided with " + collision.gameObject.name);
 		occlisionObj = collision.gameObject;
 		
 		

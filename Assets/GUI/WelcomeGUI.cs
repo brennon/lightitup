@@ -25,6 +25,12 @@ public class WelcomeGUI : MonoBehaviour {
 		GUI.Label(new Rect(Screen.width/2, Screen.height/2 + 20, 0, 0), "Select your handedness:",labelStyle);
 		handSelectionInt = GUI.SelectionGrid(new Rect(Screen.width/2 - 75, Screen.height/2 + 40, 150, 30), (int) handSelectionInt, handStrings, 2);
 		
+		// Add reference scenes button
+		if(GUI.Button(new Rect(Screen.width - 140, 20, 120, 20), "Reference Scenes")) {
+			// Load the first scene
+			Application.LoadLevel("Reference0");
+		}
+		
 		// Check that settings are valid
 		if (validSettings) {
 			// If 'Begin' button was pressed

@@ -345,7 +345,7 @@ public class SpotLight : MonoBehaviour {
 	void OnCollisionEnter(Collision collision)	
 	{
 		
-		print("Collided with " + collision.gameObject.name);
+		// print("Collided with " + collision.gameObject.name);
 		occlisionObj = collision.gameObject;
 		
 		

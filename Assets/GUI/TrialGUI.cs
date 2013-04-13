@@ -10,13 +10,19 @@ public class TrialGUI : MonoBehaviour {
 			instance.AdvanceLevel();
 		}
 		
+		string imageLabel = "Scene: ";
 		string deviceLabel = "Device: ";
 		string taskLabel = "Task: ";
 		
-		if (instance.currentTask == ExperimentManager.Task.TranslationRotation)
-			taskLabel += "Translation + Rotation";
+		if (instance.currentImage == -1)
+			imageLabel += "Training";
 		else
-			taskLabel += "Translation + Intensity";
+			imageLabel += instance.currentImage;
+		
+		if (instance.currentTask == ExperimentManager.Task.TranslationRotation)
+			taskLabel += "Position + Rotation";
+		else
+			taskLabel += "Position + Intensity";
 		
 		if (instance.currentDevice == ExperimentManager.Device.Mouse)
 			deviceLabel += "Mouse";
@@ -26,6 +32,8 @@ public class TrialGUI : MonoBehaviour {
 		GUIStyle labelStyle = new GUIStyle();
 		labelStyle.normal.textColor = Color.white;		
 		labelStyle.alignment = TextAnchor.MiddleLeft;
+		
+		GUI.Label(new Rect(10, Screen.height - 60, 0, 0), imageLabel,labelStyle);
 		GUI.Label(new Rect(10, Screen.height - 40, 0, 0), deviceLabel,labelStyle);
 		GUI.Label(new Rect(10, Screen.height - 20, 0, 0), taskLabel,labelStyle);
 	}

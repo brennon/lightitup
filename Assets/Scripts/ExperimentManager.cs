@@ -11,9 +11,11 @@ public class ExperimentManager : MonoBehaviour {
 	// Current task, device, and handedness settings
 	public Device currentDevice;
 	public Task currentTask;
-	public Handedness handedness;	
+	public Handedness handedness;
+	public Vector3 currentLightTarget;
 	
 	public int subjectID;
+	public int currentImage = -1;
 	public int currentTrial = -1;
 	public int handedSelection = 8;
 	public int tasksPerTrial = 4;
@@ -44,6 +46,10 @@ public class ExperimentManager : MonoBehaviour {
             return s_Instance;
         }
     }
+	
+	public static void ResetInstance() {
+		s_Instance = null;
+	}
  
     // Ensure that the instance is destroyed when the game is stopped in the editor.
     void OnApplicationQuit() {
@@ -113,17 +119,19 @@ public class ExperimentManager : MonoBehaviour {
 			GetCurrentLightSettings();
 			Application.LoadLevel("Leap_Project");
 			// Debug.Log ("setting up trial: " + currentTrial);
-			UpdateDeviceAndTask();
+			UpdateReferenceVariables();
 		} else if (currentTrial >= 12) {
-			// Save data here
+			// Save data			
 			Application.LoadLevel("End");
 		}
 	}
 	
 	// Update the current device and task
-	private void UpdateDeviceAndTask() {
+	private void UpdateReferenceVariables() {
 		UpdateDevice();
 		UpdateTask();
+		UpdateImage();
+		UpdateLightTarget();
 	}
 	
 	// Task modes:
@@ -149,6 +157,27 @@ public class ExperimentManager : MonoBehaviour {
 		else
 			currentDevice = Device.Leap;
 	}
+	
+	private void UpdateImage() {
+		currentImage = trialList[currentTrial] / tasksPerTrial;
+	}
+	
+	private void UpdateLightTarget() {
+		switch (currentImage) {
+			case 0:
+				currentLightTarget = new Vector3(-1.554065f, 2.502152f, 1.987616f);
+				break;
+			case 1:
+				currentLightTarget = new Vector3(2.439487f, 3.929598f, 5.44588f);
+				break;
+			case 2:
+				currentLightTarget = new Vector3(0.2521598f, 2.502152f, 1.575271f);
+				break;
+			default:
+				currentLightTarget = new Vector3(0f, 0f, 0f);
+				break;
+		}
+	}
 
 	private void SetupLevel(int newLevel) {		
 		for (int i = 0; i < totalTrials; ++i) {
@@ -171,8 +200,8 @@ public class ExperimentManager : MonoBehaviour {
 	private void GetCurrentLightSettings() {
 		GameObject spotlight = GameObject.Find("NewSpotLight");
 		GameObject light = GameObject.Find("NewSpotLight/light");
-		Debug.Log ("position: " + spotlight.transform.localPosition);
-		Debug.Log ("rotation: " + light.transform.localRotation);
+		// Debug.Log ("position: " + spotlight.transform.localPosition);
+		// Debug.Log ("rotation: " + light.transform.localRotation);
 	}
 	
 	private void Update() {
