@@ -44,6 +44,7 @@ public class LeapUnityBridge : MonoBehaviour
 	// Awake is called when the script instance is being loaded.
 	void Awake()
 	{
+//		DontDestroyOnLoad(this.gameObject);
 		// If a LeapUnityBridge has already been instantiated
 		if( m_Created )
 		{
