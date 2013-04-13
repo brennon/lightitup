@@ -182,7 +182,7 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		{
 			float lastDist = lastVec.magnitude;
 			float currDist = currVec.magnitude;
-			float scale = Mathf.Clamp((currDist-lastDist)*5, -.3f, .3f);
+			float scale = Mathf.Clamp((currDist-lastDist)*3, -.3f, .3f);
 //			print ("VALUE: "+ scale);
 			m_FocusedObject.SendMessage("OnIntensity", scale, SendMessageOptions.DontRequireReceiver);
 		}
@@ -219,11 +219,12 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		int index;
 		while( (index = m_Touching.FindIndex(i => i.collider && i.collider.enabled == false)) != -1 ) 
 		{
+			print ("Touching: "+m_Touching.Count);
+				
 			m_Touching.RemoveAt(index);
 			m_LastPos.RemoveAt(index);
-			print ("Touching: "+m_Touching.Count+"  pos: "+m_LastPos.Count+" MODE: "+ActiveMode);
 		}
-		
+
 		if( m_LastFrame != null && thisFrame != null && m_Selected)
 		{
 			float transMagnitude = thisFrame.Translation(m_LastFrame).MagnitudeSquared;
@@ -278,6 +279,15 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		for( int i = 0; i < m_Touching.Count; ++i )
 		{
 			m_LastPos[i] = m_Touching[i].transform.position;	
+		}
+	}
+	
+	// Add the finger back once it's found, it the light is still selected
+	public static void OnFound(GameObject finger) {
+//		print ("Found new finger: "+ (finger==lostFinger));
+		if (m_Touching.Count == 1) {
+			m_Touching.Add(finger);
+			m_LastPos.Add(finger.transform.position);
 		}
 	}
 	
@@ -402,8 +412,9 @@ public class LeapUnitySelectionController : MonoBehaviour {
 	protected Leap.Frame m_LastFrame = null;
 	//m_Touching maintains a list of fingers currently touching the focused object.
 	//m_LastPos is the list of their last positions, used durring the update loop.
-	protected List<GameObject> 	m_Touching = new List<GameObject>();
-	protected List<Vector3>		m_LastPos = new List<Vector3>();
+	protected static List<GameObject> 	m_Touching = new List<GameObject>();
+	protected static List<Vector3>		m_LastPos = new List<Vector3>();
+	public static GameObject lostFinger = null;
 	
 	protected bool m_Selected = false;
 	protected float m_FirstTouchedTime = 0.0f;

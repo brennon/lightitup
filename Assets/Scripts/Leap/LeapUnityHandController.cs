@@ -217,6 +217,7 @@ public class LeapUnityHandController : MonoBehaviour
 		// If there is an available slot in the array:
 		if( index != -1 )
 		{
+			LeapUnitySelectionController.OnFound(m_fingers[index]);
 			// Change the index to match p.Id.
 			m_fingerIDs[index] = p.Id;
 			// Update the pointable with the data passed from the event.

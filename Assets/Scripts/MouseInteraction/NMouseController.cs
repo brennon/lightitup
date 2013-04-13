@@ -36,11 +36,11 @@ public class NMouseController : MonoBehaviour {
 		if(ExperimentManager.instance.currentDevice == ExperimentManager.Device.Mouse)
 		{
 			//Handedness
-			bool RightHandUser = true;
+			bool RightHandUser = false;
 			if(ExperimentManager.instance.handedness == ExperimentManager.Handedness.Right)
-				RightHandUser = false;
-			else
 				RightHandUser = true;
+			else
+				RightHandUser = false;
 			
 			if(ExperimentManager.instance.currentTask == ExperimentManager.Task.TranslationRotation)
 				SpotLight.InteractionMode = 1;
@@ -88,6 +88,17 @@ public class NMouseController : MonoBehaviour {
 		//left button down
 		if (Input.GetMouseButtonDown(rightHand))
 		{
+			if(Input.GetMouseButtonDown(1-rightHand))
+			{
+				clickedGmObj = GetClickedGameObject();
+				if(clickedGmObj != false)
+				{
+					clickedGmObj.SendMessage("OnMouseMode",4,SendMessageOptions.DontRequireReceiver);//translation mode
+					InteractionMode = 4;
+				}
+				return;
+			}
+			
 			preObj = clickedGmObj;
 			clickedGmObj = GetClickedGameObject();
 			
@@ -157,6 +168,17 @@ public class NMouseController : MonoBehaviour {
 		
 		else if(Input.GetMouseButtonDown(1-rightHand))
 		{
+			if(Input.GetMouseButtonDown(rightHand))
+			{
+				clickedGmObj = GetClickedGameObject();
+				if(clickedGmObj != false)
+				{
+					clickedGmObj.SendMessage("OnMouseMode",4,SendMessageOptions.DontRequireReceiver);//translation mode
+					InteractionMode = 4;
+				}
+				return;
+			}
+			
 			if(leftClicked == true && doubleClicked == false)
 			{
 				if(clickedGmObj != null)
