@@ -169,8 +169,8 @@ public class ExperimentManager : MonoBehaviour {
 	}
 	
 	private void GetCurrentLightSettings() {
-		GameObject spotlight = GameObject.Find("SpotLight-1");
-		GameObject light = GameObject.Find("SpotLight-1/light");
+		GameObject spotlight = GameObject.Find("NewSpotLight");
+		GameObject light = GameObject.Find("NewSpotLight/light");
 		Debug.Log ("position: " + spotlight.transform.localPosition);
 		Debug.Log ("rotation: " + light.transform.localRotation);
 	}

@@ -44,6 +44,8 @@ public class LeapUnityHandController : MonoBehaviour
 	// Enable/disable collisions for components.
 	void SetCollidable( GameObject obj, bool collidable )
 	{
+//		if (obj == null)
+//			return;
 		// Enable/disable collisions for all components of type Collider 
 		// that are owned by obj.
 		foreach( Collider component in obj.GetComponents<Collider>() )
@@ -58,6 +60,8 @@ public class LeapUnityHandController : MonoBehaviour
 	// Enable/disable visibility of components.
 	void SetVisible( GameObject obj, bool visible )
 	{
+//		if (obj == null)
+//			return;
 		// Enable/disable visibility for all components of type Renderer
 		// that are owned by obj, but only if m_DisplayHands is also true.
 		foreach( Renderer component in obj.GetComponents<Renderer>() )
@@ -347,7 +351,9 @@ public class LeapUnityHandController : MonoBehaviour
 		
 		// Based on the calculated handIndex, get the hand itself.
 		GameObject parent = m_hands[handIndex];
-		
+		// Don't proceed if there is no parent
+//		if (parent == null)
+//			return;
 		// If the pointable's (finger's) parent's (hand's) transform
 		// and the pointable's transform itself are different, update
 		// the parent's transform to match the pointable's.

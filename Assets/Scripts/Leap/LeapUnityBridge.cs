@@ -158,18 +158,21 @@ public class LeapUnityBridge : MonoBehaviour
 		for( int i = 0; i < behavior.m_hands.Length; i++ )
 		{
 			behavior.m_hands[i] = CreateHand(hands, i);	
+//			DontDestroyOnLoad(behavior.m_hands[i]);
 		}
 		
 		// Create each Finger and add it to the m_fingers array
 		for( int i = 0; i < behavior.m_fingers.Length; i++ )
 		{
 			behavior.m_fingers[i] = CreateFinger(behavior.m_hands[2], i);
+//			DontDestroyOnLoad(behavior.m_fingers[i]);
 		}
 		
 		// Create each Palm and add it to the m_palms array
 		for( int i = 0; i < behavior.m_palms.Length; i++ )
 		{
-			behavior.m_palms[i] = CreatePalm(behavior.m_hands[2], i);	
+			behavior.m_palms[i] = CreatePalm(behavior.m_hands[2], i);
+//			DontDestroyOnLoad(behavior.m_palms[i]);
 		}
 		
 		// Get all GameObjects in the scene with the "FingerTip" tag

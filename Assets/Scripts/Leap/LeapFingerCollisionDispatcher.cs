@@ -14,6 +14,20 @@ using System.Collections;
 public class LeapFingerCollisionDispatcher : MonoBehaviour {
 	
 	const float kHitDistance = 20.0f;
+	private bool created = false;
+	
+	void Awake() {
+        if (!created) {
+//			print ("DONT DESTROYYY");
+			// this is the first instance - make it persist
+			DontDestroyOnLoad(this.gameObject);
+			created = true;
+		} else {
+//			print ("DESTROYYY");
+			// this must be a duplicate from a scene reload - DESTROY!
+			Destroy(this.gameObject);
+		} 
+    }
 	
 	void OnTriggerEnter(Collider other)
 	{		
