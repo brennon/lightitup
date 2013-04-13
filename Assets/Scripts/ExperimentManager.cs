@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.IO;
 
 public class ExperimentManager : MonoBehaviour {
 	
@@ -22,6 +23,24 @@ public class ExperimentManager : MonoBehaviour {
 	public int totalTrials = 3;
 	public int[,] trials = {{0,1,2,3},{4,5,6,7},{8,9,10,11}};
 	public int[] trialList;
+	
+	public struct TrialData {
+		public int trialNumber;
+		public Task task;
+		public Device device;
+		public Vector3 translation;
+		public Vector3 orientation;
+		public double intensity;
+		public double time;
+	}
+	
+	public struct SubjectData {
+		public int subjectID;
+		public Handedness handedness;
+		public TrialData[] trialData;
+	}
+	
+	private SubjectData subjectData;
 	
 	// s_Instance is used to cache the instance found in the scene so we don't have to look it up every time.
     private static ExperimentManager s_Instance = null;
@@ -110,18 +129,96 @@ public class ExperimentManager : MonoBehaviour {
 				trialList[index] = trials[i,j];
 			}			
 		}
+		
+		// Setup subject data
+		subjectData = CreateEmptySubjectData(tasksPerTrial * totalTrials);
+	}
+	
+	private SubjectData CreateEmptySubjectData(int count) {
+		SubjectData empty;
+		
+		empty.subjectID = subjectID;
+		empty.handedness = handedness;
+		empty.trialData = new TrialData[count];
+		
+		return empty;
+	}
+	
+	private void PersistTrialData() {
+		int lastTrial = currentTrial;
+		
+		print ("Trial Data:");
+		subjectData.trialData[lastTrial].trialNumber = lastTrial;
+		// print ("Time: " + subjectData.trialData[lastTrial].trialNumber);
+		subjectData.trialData[lastTrial].time = 14;
+		// print ("Time: " + subjectData.trialData[lastTrial].time);
+		subjectData.trialData[lastTrial].task = currentTask;
+		// print ("Task: " + subjectData.trialData[lastTrial].task);
+		subjectData.trialData[lastTrial].device = currentDevice;
+		// print ("Device: " + subjectData.trialData[lastTrial].device);
+		PersistTrialLightData(lastTrial);
+	}
+	
+	private void PersistTrialLightData(int trial) {
+		GameObject obj = GameObject.Find ("NewSpotLight");
+		Light light = (Light) GameObject.Find ("NewSpotLight/light").light;
+		PersistTrialLightSpatialData(trial, obj);
+		PersistTrialLightIntensityData(trial, light);
+	}
+	
+	private void PersistTrialLightSpatialData(int trial, GameObject light) {
+		subjectData.trialData[trial].translation = light.transform.localPosition;
+		// Debug.Log ("Light Position: " + subjectData.trialData[trial].translation);
+		subjectData.trialData[trial].orientation = light.transform.localRotation.eulerAngles;
+		// Debug.Log ("Light Rotation: " + subjectData.trialData[trial].orientation);
+	}
+	
+	private void PersistTrialLightIntensityData(int trial, Light light) {
+		subjectData.trialData[trial].intensity = light.intensity;
+		// Debug.Log ("Light Intensity: " + subjectData.trialData[trial].intensity);
+	}
+	
+	private void WriteTrialDataToFile(string filename) {
+		StreamWriter writer;
+		writer  = new StreamWriter(filename);
+		
+		// ID, Handedness, Trial Number, Device, Task, Time, Pos X, Pos Y, Pos Z, Rot X, Rot Y, Rot Z, Intensity
+		for (int i = 0; i < totalTrials * tasksPerTrial; i++) {
+			string output = "";
+			output += subjectData.subjectID + ",\t";
+			output += subjectData.handedness + ",\t";
+			output += subjectData.trialData[i].trialNumber + ",\t";
+			output += subjectData.trialData[i].device + ",\t";
+			output += subjectData.trialData[i].task + ",\t";
+			output += subjectData.trialData[i].time + ",\t";
+			output += subjectData.trialData[i].translation.x + ",\t";
+			output += subjectData.trialData[i].translation.y + ",\t";
+			output += subjectData.trialData[i].translation.z + ",\t";
+			output += subjectData.trialData[i].orientation.x + ",\t";
+			output += subjectData.trialData[i].orientation.y + ",\t";
+			output += subjectData.trialData[i].orientation.z + ",\t";
+			output += subjectData.trialData[i].intensity;
+			writer.WriteLine(output);
+		}
+		
+		writer.Flush();
+		writer.Close();
 	}
 	
 	public void AdvanceLevel() {
+		// Save trial data before advancing
+		if (currentTrial >= 0)
+				PersistTrialData();
+		
 		currentTrial++;
 		
-		if (currentTrial < (totalTrials * tasksPerTrial)) {
-			GetCurrentLightSettings();
+		if (currentTrial < (totalTrials * tasksPerTrial)) {			
 			Application.LoadLevel("Leap_Project");
 			// Debug.Log ("setting up trial: " + currentTrial);
 			UpdateReferenceVariables();
 		} else if (currentTrial >= 12) {
-			// Save data			
+			// Save data
+			WriteTrialDataToFile(subjectData.subjectID + ".csv");
 			Application.LoadLevel("End");
 		}
 	}
@@ -195,13 +292,6 @@ public class ExperimentManager : MonoBehaviour {
 		if (Application.loadedLevelName == "Leap_Project" && currentTrial >= 0) {
 			SetupLevel(trialList[currentTrial]/tasksPerTrial);
 		}
-	}
-	
-	private void GetCurrentLightSettings() {
-		GameObject spotlight = GameObject.Find("NewSpotLight");
-		GameObject light = GameObject.Find("NewSpotLight/light");
-		// Debug.Log ("position: " + spotlight.transform.localPosition);
-		// Debug.Log ("rotation: " + light.transform.localRotation);
 	}
 	
 	private void Update() {
