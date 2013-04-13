@@ -33,8 +33,8 @@ public class SpotLight : MonoBehaviour {
 	private static ContactPoint contact;
 	private GameObject occlisionObj;
 	
-	private static float begin_time;
-	private static float end_time;
+	//private static float begin_time;
+	//private static float end_time;
 	
 	void Start () {
 		
@@ -45,7 +45,9 @@ public class SpotLight : MonoBehaviour {
 		targetPosition = new Vector3(0,0,0);
 		
 		//begin_time  =  end_time = -1.0f;
-		begin_time = Time.time;
+		//begin_time = Time.time;
+		
+		targetPosition = ExperimentManager.instance.currentLightTarget;
 	}
 	
 	// Update is called once per frame
@@ -232,6 +234,7 @@ public class SpotLight : MonoBehaviour {
 	
 	void OnLeapSelected(bool selected)
 	{
+		NMouseController.SetGameObj(this.gameObject);
 		if(selected == true)
 			MouseMode = 0;
 		else 

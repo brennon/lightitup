@@ -47,10 +47,17 @@ public class NMouseController : MonoBehaviour {
 			else if(ExperimentManager.instance.currentTask == ExperimentManager.Task.TranslationIntensity)
 			{
 				SpotLight.InteractionMode = 2;
-				SpotLight.targetPosition = ExperimentManager.instance.currentLightTarget;
 			}
 			
 			Mouse_Interaction(RightHandUser);
+		}
+		
+		if (Input.GetKeyDown(KeyCode.A)) 
+		{
+			print ("GAME OBJL "+clickedGmObj);
+			if(clickedGmObj!=null)
+				clickedGmObj.SendMessage("LightReset",null,SendMessageOptions.DontRequireReceiver);//reset
+			
 		}
 	}
 	
@@ -67,6 +74,10 @@ public class NMouseController : MonoBehaviour {
 			return null;
     }
 	
+	public static void SetGameObj (GameObject light) {
+		print ("OBJ: "+light);
+		clickedGmObj = light;
+	}
 	
 	void Mouse_Interaction(bool RightHandMode)
 	{
@@ -209,12 +220,7 @@ public class NMouseController : MonoBehaviour {
 		
 		
 		////////////////////////////////////////////////////////////////////////////////////////////////////////
-		if (Input.GetKeyDown(KeyCode.A)) 
-		{
-			if(clickedGmObj!=null)
-				clickedGmObj.SendMessage("LightReset",null,SendMessageOptions.DontRequireReceiver);//reset
-				
-		}
+		
 		/*
 		if(Input.GetKeyDown(KeyCode.Alpha0))
 		{
