@@ -40,7 +40,11 @@ public class LeapUnityHandController : MonoBehaviour
 		
 	private Dictionary<int, string> FingerTypes = new Dictionary<int, string>();
 	public static Pointable point;
-		
+	
+	void Awake() {
+		DontDestroyOnLoad(this.gameObject);
+	}
+	
 	// Enable/disable collisions for components.
 	void SetCollidable( GameObject obj, bool collidable )
 	{

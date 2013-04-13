@@ -389,7 +389,9 @@ public class LeapUnitySelectionController : MonoBehaviour {
 		
 	}
 	
-	void Start()
+	
+	
+	void OnLevelWasLoaded()
 	{
 		//Check if the Leap should be active and set the interaction mode accordingly
 		if (ExperimentManager.instance.currentDevice == ExperimentManager.Device.Leap) {
