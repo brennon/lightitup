@@ -14,6 +14,7 @@ public class ExperimentManager : MonoBehaviour {
 	public Task currentTask;
 	public Handedness handedness;
 	public Vector3 currentLightTarget;
+	public double currentLightIntensity = 1.5;
 	
 	public int subjectID;
 	public int currentImage = -1;
@@ -229,6 +230,7 @@ public class ExperimentManager : MonoBehaviour {
 		UpdateTask();
 		UpdateImage();
 		UpdateLightTarget();
+		UpdateLightIntensity();
 	}
 	
 	// Task modes:
@@ -275,6 +277,23 @@ public class ExperimentManager : MonoBehaviour {
 				break;
 		}
 	}
+	
+	private void UpdateLightIntensity() {
+		switch (currentImage) {
+			case 0:
+				currentLightIntensity = 1.2;
+				break;
+			case 1:
+				currentLightIntensity = 3.9;
+				break;
+			case 2:
+				currentLightIntensity = 0.8;
+				break;
+			default:
+				currentLightIntensity = 0;
+				break;
+		}
+	}
 
 	private void SetupLevel(int newLevel) {		
 		for (int i = 0; i < totalTrials; ++i) {
@@ -291,6 +310,14 @@ public class ExperimentManager : MonoBehaviour {
 	private void OnLevelWasLoaded (int newLevel) {
 		if (Application.loadedLevelName == "Leap_Project" && currentTrial >= 0) {
 			SetupLevel(trialList[currentTrial]/tasksPerTrial);
+		}
+		
+		Light light = (Light) GameObject.Find ("NewSpotLight/light").light;
+		
+		if (currentTask == Task.TranslationRotation) {			
+			light.intensity = (float) currentLightIntensity;
+		} else {
+			light.intensity = 1.5f;
 		}
 	}
 	
