@@ -150,7 +150,7 @@ public class ExperimentManager : MonoBehaviour {
 		print ("Trial Data:");
 		subjectData.trialData[lastTrial].trialNumber = lastTrial;
 		// print ("Time: " + subjectData.trialData[lastTrial].trialNumber);
-		subjectData.trialData[lastTrial].time = 14;
+		subjectData.trialData[lastTrial].time = SpotLight.selectedTime;
 		// print ("Time: " + subjectData.trialData[lastTrial].time);
 		subjectData.trialData[lastTrial].task = currentTask;
 		// print ("Task: " + subjectData.trialData[lastTrial].task);

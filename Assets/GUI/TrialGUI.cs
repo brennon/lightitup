@@ -14,6 +14,8 @@ public class TrialGUI : MonoBehaviour {
 		string deviceLabel = "Device: ";
 		string taskLabel = "Task: ";
 		
+		string timeLabel = "Selected Time: " + SpotLight.selectedTime;
+		
 		if (instance.currentImage == -1)
 			imageLabel += "Training";
 		else
@@ -33,6 +35,7 @@ public class TrialGUI : MonoBehaviour {
 		labelStyle.normal.textColor = Color.white;		
 		labelStyle.alignment = TextAnchor.MiddleLeft;
 		
+		GUI.Label(new Rect(10, Screen.height - 80, 0, 0), timeLabel,labelStyle);
 		GUI.Label(new Rect(10, Screen.height - 60, 0, 0), imageLabel,labelStyle);
 		GUI.Label(new Rect(10, Screen.height - 40, 0, 0), deviceLabel,labelStyle);
 		GUI.Label(new Rect(10, Screen.height - 20, 0, 0), taskLabel,labelStyle);
