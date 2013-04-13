@@ -46,8 +46,6 @@ public class SpotLight : MonoBehaviour {
 		
 		//begin_time  =  end_time = -1.0f;
 		begin_time = Time.time;
-		
-	
 	}
 	
 	// Update is called once per frame
@@ -59,7 +57,7 @@ public class SpotLight : MonoBehaviour {
 			SelectedMode();
 			
 			if(InteractionMode ==1) //translation and rotation
-			{
+			{				
 				if(MouseMode ==1)//translation
 					OnMouseTranslation();
 				else if(MouseMode ==2)
@@ -242,6 +240,7 @@ public class SpotLight : MonoBehaviour {
 	
 	void SetIntensity(float values)
 	{
+		print ("set intensity with: " + values);
 		Light []  children;
 		children = transform.gameObject.GetComponentsInChildren<Light>();
         foreach (Light child in children) {
