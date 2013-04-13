@@ -139,8 +139,8 @@ public class NMouseController : MonoBehaviour {
 			rightClicked = false;
 			if(clickedGmObj != null)
 			{
-				clickedGmObj.SendMessage("OnMouseMode",0,SendMessageOptions.DontRequireReceiver);//mouse deselected
-				InteractionMode = 0;
+				clickedGmObj.SendMessage("OnMouseMode",-1,SendMessageOptions.DontRequireReceiver);//mouse deselected
+				InteractionMode = -1;
 			}
 		}
 		
@@ -188,8 +188,8 @@ public class NMouseController : MonoBehaviour {
 			
 			if(clickedGmObj != null)
 			{
-				clickedGmObj.SendMessage("OnMouseMode",0,SendMessageOptions.DontRequireReceiver);//mouse deselected
-				InteractionMode = 0;
+				clickedGmObj.SendMessage("OnMouseMode",-1,SendMessageOptions.DontRequireReceiver);//mouse deselected
+				InteractionMode = -1;
 			}
 		}
 		/*
@@ -200,7 +200,7 @@ public class NMouseController : MonoBehaviour {
         		clickedGmObj.SendMessage("TranslationZ", delta, SendMessageOptions.DontRequireReceiver);
 		}
 		*/
-		else if(SpotLight.InteractionMode ==2)//Translation and intensity
+		else if(SpotLight.InteractionMode ==2 && InteractionMode ==1)//Translation and intensity
 		{
 			float delta = Input.GetAxis("Mouse ScrollWheel");
 			if (clickedGmObj != null)

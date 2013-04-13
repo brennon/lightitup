@@ -265,6 +265,7 @@ public class SpotLight : MonoBehaviour {
 		return Mathf.Round(num * 10) / 10;
 	}
 	
+	/*
 	void OnGUI()
 	{
 		string label="";
@@ -300,6 +301,7 @@ public class SpotLight : MonoBehaviour {
 			
 		}
 	}
+	*/
 	
 	
 	void OnCollisionEnter(Collision collision)	
