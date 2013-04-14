@@ -23,8 +23,10 @@ public class TrialGUI : MonoBehaviour {
 		
 		if (instance.currentTask == ExperimentManager.Task.TranslationRotation)
 			taskLabel += "Position + Rotation";
-		else
+		else if (instance.currentTask == ExperimentManager.Task.TranslationIntensity)
 			taskLabel += "Position + Intensity";
+		else if (instance.currentTask == ExperimentManager.Task.Setup)
+			taskLabel += "Setup";
 		
 		if (instance.currentDevice == ExperimentManager.Device.Mouse)
 			deviceLabel += "Mouse";
@@ -32,12 +34,15 @@ public class TrialGUI : MonoBehaviour {
 			deviceLabel += "Leap";
 		
 		GUIStyle labelStyle = new GUIStyle();
-		labelStyle.normal.textColor = Color.white;		
+		labelStyle.normal.textColor = Color.white;
+		labelStyle.fontSize = 24;
 		labelStyle.alignment = TextAnchor.MiddleLeft;
 		
-		GUI.Label(new Rect(10, Screen.height - 80, 0, 0), timeLabel,labelStyle);
-		GUI.Label(new Rect(10, Screen.height - 60, 0, 0), imageLabel,labelStyle);
-		GUI.Label(new Rect(10, Screen.height - 40, 0, 0), deviceLabel,labelStyle);
+		if (instance.currentTask == ExperimentManager.Task.Setup) {
+			GUI.Label(new Rect(10, Screen.height - 110, 0, 0), timeLabel,labelStyle);
+			GUI.Label(new Rect(10, Screen.height - 80, 0, 0), imageLabel,labelStyle);
+		}
+		GUI.Label(new Rect(10, Screen.height - 50, 0, 0), deviceLabel,labelStyle);
 		GUI.Label(new Rect(10, Screen.height - 20, 0, 0), taskLabel,labelStyle);
 	}
 }

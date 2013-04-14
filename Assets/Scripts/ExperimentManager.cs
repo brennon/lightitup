@@ -5,7 +5,7 @@ using System.IO;
 public class ExperimentManager : MonoBehaviour {
 	
 	// Enumerations for task, device, and handedness
-	public enum Task {TranslationRotation, TranslationIntensity};
+	public enum Task {TranslationRotation, TranslationIntensity, Setup};
 	public enum Device {Mouse, Leap};
 	public enum Handedness {Left, Right, Unspecified};
 	
@@ -21,9 +21,24 @@ public class ExperimentManager : MonoBehaviour {
 	public int currentTrial = -1;
 	public int handedSelection = 8;
 	public int tasksPerTrial = 4;
-	public int totalTrials = 3;
-	public int[,] trials = {{0,1,2,3},{4,5,6,7},{8,9,10,11}};
+	public int totalTrials = 11;
 	public int[] trialList;
+	
+	// Trial parameters
+	public float[] lightIntensities = {1.2f, 3.9f, 0.8f, 1.14007f, 2.360144f, 1.440088f, 3.140193f, 1.070065f, 4.2f, 1.75985f, 3.409951f};
+	public Vector3[] lightTargets = {
+		new Vector3(-1.554065f, 2.502152f, 1.987616f),
+		new Vector3(2.439487f, 3.929598f, 5.44588f),
+		new Vector3(0.2521598f, 2.502152f, 1.575271f),
+		new Vector3(-3.8f, 3.0f, 6.1f),
+		new Vector3(3.0f, 3.2f, 3.4f),
+		new Vector3(2.2f, 2.9f, 2.2f),
+		new Vector3(2.8f, 3.6f, 6.6f),
+		new Vector3(-1.9f, 3.1f, 7.3f),
+		new Vector3(-1.6f, 2.4f, 6.4f),
+		new Vector3(1.2f, 2.5f, 4.2f),
+		new Vector3(1.8f, 3.1f, 2.1f)
+	};
 	
 	public struct TrialData {
 		public int trialNumber;
@@ -42,6 +57,8 @@ public class ExperimentManager : MonoBehaviour {
 	}
 	
 	private SubjectData subjectData;
+	    
+    public RaycastHit hit;
 	
 	// s_Instance is used to cache the instance found in the scene so we don't have to look it up every time.
     private static ExperimentManager s_Instance = null;
@@ -97,6 +114,16 @@ public class ExperimentManager : MonoBehaviour {
 	}
 	
 	void Start() {
+		// Build base trial list
+		int[,] trials = new int[totalTrials,tasksPerTrial];
+		int trialIndex = 0;
+		for (int i = 0; i < totalTrials; i++) {
+			for (int j = 0; j < tasksPerTrial; j++) {
+				trials[i,j] = trialIndex;
+				trialIndex++;
+			}
+		}
+		
 		// Randomize trial order
 		System.Random r = new System.Random();
 		for (int i = totalTrials - 1; i > 0; i--) {
@@ -117,10 +144,11 @@ public class ExperimentManager : MonoBehaviour {
 				// Debug.Log("swapping task " + j + " with task " + k);
 				int temp = trials[i,j];
 				trials[i,j] = trials[i,k];
-				trials[i,k] = temp;
-				// PrintTrials(trials);
+				trials[i,k] = temp;				
 			}
 		}
+		
+		PrintTrials(trials);
 		
 		// Flatten ordering and save in trialList
 		trialList = new int[totalTrials * tasksPerTrial];
@@ -262,43 +290,47 @@ public class ExperimentManager : MonoBehaviour {
 	}
 	
 	private void UpdateLightTarget() {
-		switch (currentImage) {
-			case 0:
-				currentLightTarget = new Vector3(-1.554065f, 2.502152f, 1.987616f);
-				break;
-			case 1:
-				currentLightTarget = new Vector3(2.439487f, 3.929598f, 5.44588f);
-				break;
-			case 2:
-				currentLightTarget = new Vector3(0.2521598f, 2.502152f, 1.575271f);
-				break;
-			default:
-				currentLightTarget = new Vector3(0f, 0f, 0f);
-				break;
-		}
+		currentLightTarget = lightTargets[currentImage];
+//		switch (currentImage) {
+//			case 0:
+//				currentLightTarget = new Vector3(-1.554065f, 2.502152f, 1.987616f);
+//				break;
+//			case 1:
+//				currentLightTarget = new Vector3(2.439487f, 3.929598f, 5.44588f);
+//				break;
+//			case 2:
+//				currentLightTarget = new Vector3(0.2521598f, 2.502152f, 1.575271f);
+//				break;
+//			default:
+//				currentLightTarget = new Vector3(0f, 0f, 0f);
+//				break;
+//		}
 	}
 	
 	private void UpdateLightIntensity() {
-		switch (currentImage) {
-			case 0:
-				currentLightIntensity = 1.2;
-				break;
-			case 1:
-				currentLightIntensity = 3.9;
-				break;
-			case 2:
-				currentLightIntensity = 0.8;
-				break;
-			default:
-				currentLightIntensity = 0;
-				break;
-		}
+		currentLightIntensity = lightIntensities[currentImage];
+//		switch (currentImage) {
+//			case 0:
+//				currentLightIntensity = 1.2;
+//				break;
+//			case 1:
+//				currentLightIntensity = 3.9;
+//				break;
+//			case 2:
+//				currentLightIntensity = 0.8;
+//				break;
+//			default:
+//				currentLightIntensity = 0;
+//				break;
+//		}
 	}
 
-	private void SetupLevel(int newLevel) {		
+	private void SetupLevel(int newLevel) {
+		print ("SetupLevel("+newLevel+")");
 		for (int i = 0; i < totalTrials; ++i) {
 			if (i != newLevel) {
 				string targetTag = "Trial" + i;
+				print ("deactivating objects with tag "+targetTag);
 				GameObject[] toDeactivate = GameObject.FindGameObjectsWithTag(targetTag);
 				foreach (GameObject obj in toDeactivate) {
 					obj.SetActive(false);
@@ -308,8 +340,11 @@ public class ExperimentManager : MonoBehaviour {
 	}
 	
 	private void OnLevelWasLoaded (int newLevel) {
-		if (Application.loadedLevelName == "Leap_Project" && currentTrial >= 0) {
+		print ("OnLevelWasLoaded("+newLevel+")");
+		if (Application.loadedLevelName == "Leap_Project" && currentTrial >= 0) {			
 			SetupLevel(trialList[currentTrial]/tasksPerTrial);
+		} else if (Application.loadedLevelName == "Leap_Project" && currentTrial < 0) {
+			SetupLevel (-1);
 		}
 		
 		Light light = (Light) GameObject.Find ("NewSpotLight/light").light;
@@ -321,7 +356,24 @@ public class ExperimentManager : MonoBehaviour {
 		}
 	}
 	
+	private void PrintCurrentParameters() {
+		GameObject obj = GameObject.Find ("NewSpotLight");
+		Light light = (Light) GameObject.Find ("NewSpotLight/light").light;
+		print ("position: " + obj.transform.localPosition);
+		print ("rotation: " + obj.transform.localRotation.eulerAngles);
+		print ("intensity: " + light.intensity);
+		print ("target point: " + currentLightTarget);
+	}	
+	
 	private void Update() {
+		if (currentTask == Task.Setup) {
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			
+			if (Physics.Raycast(ray, out hit, 100)) {
+	            Debug.DrawLine(ray.origin, hit.point);
+				currentLightTarget = hit.point;
+			}
+		}
 		CheckForKeyUps();
 	}
 	
@@ -343,7 +395,17 @@ public class ExperimentManager : MonoBehaviour {
 			currentDevice = Device.Mouse;
 			currentTask = Task.TranslationIntensity;
 			changeLeap = true;
+		} else if (Input.GetKeyUp(KeyCode.B)) {
+			currentDevice = Device.Mouse;
+			currentTask = Task.Setup;
+			changeLeap = true;
+		} else if (Input.GetKeyUp(KeyCode.N)) {
+			PrintCurrentParameters();
+			currentDevice = Device.Mouse;
+			currentTask = Task.TranslationIntensity;
+			changeLeap = true;
 		}
+		
 		if (changeLeap) {
 			int leapMode = currentTask == Task.TranslationRotation ? 0 : 1;
 			LeapInput.ChangeMode(currentDevice == Device.Leap ? leapMode : -5);

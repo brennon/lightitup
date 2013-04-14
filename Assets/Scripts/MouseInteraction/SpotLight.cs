@@ -51,7 +51,7 @@ public class SpotLight : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update () {		
 		
 		if(MouseMode>=0) // light is selected
 		{
@@ -92,6 +92,11 @@ public class SpotLight : MonoBehaviour {
 		else
 		{
 			DeselectedMode();
+		}
+		
+		if (ExperimentManager.instance.currentTask == ExperimentManager.Task.Setup) {
+			targetPosition = ExperimentManager.instance.currentLightTarget;
+			transform.LookAt(targetPosition);
 		}
 	}
 	
@@ -243,7 +248,6 @@ public class SpotLight : MonoBehaviour {
 	
 	void SetIntensity(float values)
 	{
-		print ("set intensity with: " + values);
 		Light []  children;
 		children = transform.gameObject.GetComponentsInChildren<Light>();
         foreach (Light child in children) {
