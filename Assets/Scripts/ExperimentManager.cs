@@ -148,8 +148,6 @@ public class ExperimentManager : MonoBehaviour {
 			}
 		}
 		
-		PrintTrials(trials);
-		
 		// Flatten ordering and save in trialList
 		trialList = new int[totalTrials * tasksPerTrial];
 		for (int i = 0; i < totalTrials; i++) {
@@ -176,7 +174,7 @@ public class ExperimentManager : MonoBehaviour {
 	private void PersistTrialData() {
 		int lastTrial = currentTrial;
 		
-		print ("Trial Data:");
+		// print ("Trial Data:");
 		subjectData.trialData[lastTrial].trialNumber = lastTrial;
 		// print ("Time: " + subjectData.trialData[lastTrial].trialNumber);
 		subjectData.trialData[lastTrial].time = SpotLight.selectedTime;
@@ -326,11 +324,11 @@ public class ExperimentManager : MonoBehaviour {
 	}
 
 	private void SetupLevel(int newLevel) {
-		print ("SetupLevel("+newLevel+")");
+		// print ("SetupLevel("+newLevel+")");
 		for (int i = 0; i < totalTrials; ++i) {
 			if (i != newLevel) {
 				string targetTag = "Trial" + i;
-				print ("deactivating objects with tag "+targetTag);
+				// print ("deactivating objects with tag "+targetTag);
 				GameObject[] toDeactivate = GameObject.FindGameObjectsWithTag(targetTag);
 				foreach (GameObject obj in toDeactivate) {
 					obj.SetActive(false);
@@ -340,22 +338,20 @@ public class ExperimentManager : MonoBehaviour {
 	}
 	
 	private void OnLevelWasLoaded (int newLevel) {
-		print ("OnLevelWasLoaded("+newLevel+")");
-		if (Application.loadedLevelName == "Leap_Project" && currentTrial >= 0) {			
-			SetupLevel(trialList[currentTrial]/tasksPerTrial);
-		} else if (Application.loadedLevelName == "Leap_Project" && currentTrial < 0) {
-			SetupLevel (-1);
-		}
-		
-		//Light light = (Light) GameObject.Find ("NewSpotLight/light").light;
-		GameObject lightObj = GameObject.Find ("NewSpotLight/light");
-		if(lightObj != null)
-		{
-			Light light = lightObj.light;
+		// print ("OnLevelWasLoaded("+newLevel+")");
+		if (Application.loadedLevelName == "Leap_Project") {
+			Light light = (Light) GameObject.Find ("NewSpotLight/light").light;
+			
 			if (currentTask == Task.TranslationRotation) {			
 				light.intensity = (float) currentLightIntensity;
 			} else {
 				light.intensity = 1.5f;
+			}
+			
+			if (currentTrial >= 0) {			
+				SetupLevel(trialList[currentTrial]/tasksPerTrial);
+			} else if (currentTrial < 0) {
+				SetupLevel (-1);
 			}
 		}
 		
