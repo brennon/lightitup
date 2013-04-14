@@ -214,18 +214,18 @@ public class ExperimentManager : MonoBehaviour {
 		// ID, Handedness, Trial Number, Device, Task, Time, Pos X, Pos Y, Pos Z, Rot X, Rot Y, Rot Z, Intensity
 		for (int i = 0; i < totalTrials * tasksPerTrial; i++) {
 			string output = "";
-			output += subjectData.subjectID + ",\t";
-			output += subjectData.handedness + ",\t";
-			output += subjectData.trialData[i].trialNumber + ",\t";
-			output += subjectData.trialData[i].device + ",\t";
-			output += subjectData.trialData[i].task + ",\t";
-			output += subjectData.trialData[i].time + ",\t";
-			output += subjectData.trialData[i].translation.x + ",\t";
-			output += subjectData.trialData[i].translation.y + ",\t";
-			output += subjectData.trialData[i].translation.z + ",\t";
-			output += subjectData.trialData[i].orientation.x + ",\t";
-			output += subjectData.trialData[i].orientation.y + ",\t";
-			output += subjectData.trialData[i].orientation.z + ",\t";
+			output += subjectData.subjectID + ",";
+			output += subjectData.handedness + ",";
+			output += subjectData.trialData[i].trialNumber + ",";
+			output += subjectData.trialData[i].device + ",";
+			output += subjectData.trialData[i].task + ",";
+			output += subjectData.trialData[i].time + ",";
+			output += subjectData.trialData[i].translation.x + ",";
+			output += subjectData.trialData[i].translation.y + ",";
+			output += subjectData.trialData[i].translation.z + ",";
+			output += subjectData.trialData[i].orientation.x + ",";
+			output += subjectData.trialData[i].orientation.y + ",";
+			output += subjectData.trialData[i].orientation.z + ",";
 			output += subjectData.trialData[i].intensity;
 			writer.WriteLine(output);
 		}
