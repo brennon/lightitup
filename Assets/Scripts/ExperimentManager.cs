@@ -347,13 +347,18 @@ public class ExperimentManager : MonoBehaviour {
 			SetupLevel (-1);
 		}
 		
-		Light light = (Light) GameObject.Find ("NewSpotLight/light").light;
-		
-		if (currentTask == Task.TranslationRotation) {			
-			light.intensity = (float) currentLightIntensity;
-		} else {
-			light.intensity = 1.5f;
+		//Light light = (Light) GameObject.Find ("NewSpotLight/light").light;
+		GameObject lightObj = GameObject.Find ("NewSpotLight/light");
+		if(lightObj != null)
+		{
+			Light light = lightObj.light;
+			if (currentTask == Task.TranslationRotation) {			
+				light.intensity = (float) currentLightIntensity;
+			} else {
+				light.intensity = 1.5f;
+			}
 		}
+		
 	}
 	
 	private void PrintCurrentParameters() {
