@@ -23,8 +23,8 @@ public class ReferenceGUI : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (toolbarInt != currentTrial) {
-		//	toolbarInt = currentTrialNumber;
-			Debug.Log ("loading level " + "Reference" + toolbarInt);
+			// toolbarInt = currentTrialNumber;
+			// Debug.Log ("loading level " + "Reference" + toolbarInt);
 			Application.LoadLevel("Reference" + toolbarInt);
 		}
 	}
