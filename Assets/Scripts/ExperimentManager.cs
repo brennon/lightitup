@@ -21,23 +21,24 @@ public class ExperimentManager : MonoBehaviour {
 	public int currentTrial = -1;
 	public int handedSelection = 8;
 	public int tasksPerTrial = 4;
-	public int totalTrials = 11;
+	public int totalTrials = 12;
 	public int[] trialList;
 	
 	// Trial parameters
-	public float[] lightIntensities = {1.2f, 3.9f, 0.8f, 1.14007f, 2.360144f, 1.440088f, 3.140193f, 1.070065f, 4.2f, 1.75985f, 3.409951f};
+	public float[] lightIntensities = {4.8f, 7.2f, 2.3f, 2.9f, 5.9f, 3.3f, 6.5f, 7.1f, 5.4f, 1.75f, 3.4f, 2.1f};
 	public Vector3[] lightTargets = {
-		new Vector3(-1.554065f, 2.502152f, 1.987616f),
-		new Vector3(2.439487f, 3.929598f, 5.44588f),
-		new Vector3(0.2521598f, 2.502152f, 1.575271f),
-		new Vector3(-3.8f, 3.0f, 6.1f),
-		new Vector3(3.0f, 3.2f, 3.4f),
-		new Vector3(2.2f, 2.9f, 2.2f),
-		new Vector3(2.8f, 3.6f, 6.6f),
-		new Vector3(-1.9f, 3.1f, 7.3f),
-		new Vector3(-1.6f, 2.4f, 6.4f),
-		new Vector3(1.2f, 2.5f, 4.2f),
-		new Vector3(1.8f, 3.1f, 2.1f)
+		new Vector3(-1.554065f, 2.502152f, 1.987616f),	//trial0: piano (top)
+		new Vector3(2.439487f, 3.929598f, 5.44588f),	//trial1: statue (left-bottom)
+		new Vector3(0.2521598f, 2.502152f, 1.575271f),	//trial2: human (right-top)
+		new Vector3(-3.8f, 3.0f, 6.1f),	//trial3: bed (right)
+		new Vector3(3.0f, 3.4f, 4.0f),	//trial4: car (left)
+		new Vector3(2.2f, 2.9f, 2.2f),	//trial5: sofa (left-top)
+		new Vector3(2.7f, 3.0f, 6.6f),	//trial6: dresser (left-middle)
+		new Vector3(-1.8f, 3.0f, 6.1f),	//trial7: kitchen (right-bottom)
+		new Vector3(-0.4f, 3.9f, 6.2f),	//trial8: monument (right-middle)
+		new Vector3(1.2f, 2.5f, 4.2f),	//trial9: tables (top)
+		new Vector3(1.8f, 3.1f, 2.1f),	//trial10: barrel (right)
+		new Vector3(2.2f, 3.0f, 2.9f)	//trial11: couple (left)
 	};
 	
 	public struct TrialData {
