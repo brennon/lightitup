@@ -51,7 +51,12 @@ public class SpotLight : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {		
+	void Update () {
+		
+		if (Input.GetKeyDown(KeyCode.A)) 
+		{
+			LightReset();	
+		}
 		
 		if(MouseMode>=0) // light is selected
 		{
@@ -204,7 +209,7 @@ public class SpotLight : MonoBehaviour {
 	{
 		transform.position = originia_position;
 		transform.rotation = original_rotation;
-		SetIntensity(original_intensity);
+		//SetIntensity(original_intensity);
 		
 	}
 	
