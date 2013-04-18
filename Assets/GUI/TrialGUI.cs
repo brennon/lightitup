@@ -39,9 +39,9 @@ public class TrialGUI : MonoBehaviour {
 		labelStyle.alignment = TextAnchor.MiddleLeft;
 		
 		if (instance.currentTask == ExperimentManager.Task.Setup) {
-			GUI.Label(new Rect(10, Screen.height - 110, 0, 0), timeLabel,labelStyle);
-			GUI.Label(new Rect(10, Screen.height - 80, 0, 0), imageLabel,labelStyle);
+			GUI.Label(new Rect(10, Screen.height - 110, 0, 0), timeLabel,labelStyle);			
 		}
+		GUI.Label(new Rect(10, Screen.height - 80, 0, 0), imageLabel,labelStyle);
 		GUI.Label(new Rect(10, Screen.height - 50, 0, 0), deviceLabel,labelStyle);
 		GUI.Label(new Rect(10, Screen.height - 20, 0, 0), taskLabel,labelStyle);
 	}

@@ -25,7 +25,7 @@ public class ExperimentManager : MonoBehaviour {
 	public int[] trialList;
 	
 	// Trial parameters
-	public float[] lightIntensities = {4.8f, 7.2f, 2.3f, 2.9f, 5.9f, 3.3f, 6.5f, 7.1f, 5.4f, 1.75f, 3.4f, 2.1f};
+	public float[] lightIntensities = {4.8f, 7.2f, 2.3f, 2.9f, 5.9f, 3.3f, 6.5f, 7.1f, 5.4f, 1.75f, 3.4f, 2.1f, 3.3f};
 	public Vector3[] lightTargets = {
 		new Vector3(-1.554065f, 2.502152f, 1.987616f),	//trial0: piano (top)
 		new Vector3(2.439487f, 3.929598f, 5.44588f),	//trial1: statue (left-bottom)
@@ -38,7 +38,8 @@ public class ExperimentManager : MonoBehaviour {
 		new Vector3(-0.4f, 3.9f, 6.2f),	//trial8: monument (right-middle)
 		new Vector3(1.2f, 2.5f, 4.2f),	//trial9: tables (top)
 		new Vector3(1.8f, 3.1f, 2.1f),	//trial10: barrel (right)
-		new Vector3(2.2f, 3.0f, 2.9f)	//trial11: couple (left)
+		new Vector3(2.2f, 3.0f, 2.9f),	//trial11: couple (left)
+		new Vector3(2.2f, 2.7f, 6.2f)	// trial12: training
 	};
 	
 	public struct TrialData {
@@ -326,7 +327,7 @@ public class ExperimentManager : MonoBehaviour {
 
 	private void SetupLevel(int newLevel) {
 		// print ("SetupLevel("+newLevel+")");
-		for (int i = 0; i < totalTrials; ++i) {
+		for (int i = 0; i < totalTrials + 1; ++i) {
 			if (i != newLevel) {
 				string targetTag = "Trial" + i;
 				// print ("deactivating objects with tag "+targetTag);
@@ -351,8 +352,9 @@ public class ExperimentManager : MonoBehaviour {
 			
 			if (currentTrial >= 0) {			
 				SetupLevel(trialList[currentTrial]/tasksPerTrial);
+				print ("setting up level " + trialList[currentTrial]/tasksPerTrial);
 			} else if (currentTrial < 0) {
-				SetupLevel (-1);
+				SetupLevel (12);
 			}
 		}
 		
@@ -389,6 +391,9 @@ public class ExperimentManager : MonoBehaviour {
 			currentDevice = Device.Leap;
 			currentTask = Task.TranslationIntensity;
 			changeLeap = true;
+			if (currentTrial == -1) {
+				currentLightTarget = lightTargets[12];
+			}
 		} else if (Input.GetKeyUp(KeyCode.C)) {
 			currentDevice = Device.Mouse;
 			currentTask = Task.TranslationRotation;
@@ -397,6 +402,10 @@ public class ExperimentManager : MonoBehaviour {
 			currentDevice = Device.Mouse;
 			currentTask = Task.TranslationIntensity;
 			changeLeap = true;
+			print (currentTrial);
+			if (currentTrial == -1) {
+				currentLightTarget = lightTargets[12];
+			}
 		} else if (Input.GetKeyUp(KeyCode.B)) {
 			currentDevice = Device.Mouse;
 			currentTask = Task.Setup;

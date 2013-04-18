@@ -51,7 +51,12 @@ public class SpotLight : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {		
+	void Update () {
+		if (ExperimentManager.instance.currentTrial == -1) {
+			if (ExperimentManager.instance.currentTask == ExperimentManager.Task.TranslationIntensity) {
+				targetPosition = ExperimentManager.instance.currentLightTarget;
+			}
+		}
 		
 		if(MouseMode>=0) // light is selected
 		{
