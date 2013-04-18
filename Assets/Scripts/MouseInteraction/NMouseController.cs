@@ -51,14 +51,6 @@ public class NMouseController : MonoBehaviour {
 			
 			Mouse_Interaction(RightHandUser);
 		}
-		
-		if (Input.GetKeyDown(KeyCode.A)) 
-		{
-			print ("GAME OBJL "+clickedGmObj);
-			if(clickedGmObj!=null)
-				clickedGmObj.SendMessage("LightReset",null,SendMessageOptions.DontRequireReceiver);//reset
-			
-		}
 	}
 	
 	GameObject GetClickedGameObject()

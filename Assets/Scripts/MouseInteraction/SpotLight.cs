@@ -209,7 +209,7 @@ public class SpotLight : MonoBehaviour {
 	{
 		transform.position = originia_position;
 		transform.rotation = original_rotation;
-		SetIntensity(original_intensity);
+		//SetIntensity(original_intensity);
 		
 	}
 	
