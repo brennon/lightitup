@@ -58,6 +58,9 @@ public class SpotLight : MonoBehaviour {
 			}
 		}
 		
+		if(Input.GetKeyDown(KeyCode.A))
+			LightReset();
+		
 		if(MouseMode>=0) // light is selected
 		{
 			selectedTime += Time.deltaTime;

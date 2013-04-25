@@ -16,8 +16,6 @@ public class NMouseController : MonoBehaviour {
 	public string LightName = "NewSpotLight";
 	
 	public static int InteractionMode;
-	private bool lightSelect = false;
-	private float DELAY_CONST = 0.2f;
 	private GameObject preObj;
 	private bool leftClicked = false;
 	private bool doubleClicked = false;
@@ -151,10 +149,12 @@ public class NMouseController : MonoBehaviour {
 			leftClicked = false;
 			doubleClicked = false;
 			rightClicked = false;
+			print ("aaa!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			if(clickedGmObj != null)
 			{
 				clickedGmObj.SendMessage("OnMouseMode",-1,SendMessageOptions.DontRequireReceiver);//mouse deselected
 				InteractionMode = -1;
+				print ("aaa~~~~~~~~~~~~~~~~~~~~");
 			}
 		}
 		
@@ -193,6 +193,8 @@ public class NMouseController : MonoBehaviour {
 				}		
 			}
 			
+			if(Input.GetMouseButtonDown(rightHand)==false)
+			{
 				clickedGmObj = GetClickedGameObject();
 				if(clickedGmObj != null && doubleClicked == false)
 				{ 
@@ -202,7 +204,7 @@ public class NMouseController : MonoBehaviour {
 						InteractionMode = 2;
 					}			
 				}
-			
+			}
 		}
 		
 		else if(Input.GetMouseButtonUp(1-rightHand))
@@ -211,10 +213,12 @@ public class NMouseController : MonoBehaviour {
 			leftClicked = false;
 			rightClicked = false;
 			
+			print ("bbb!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			if(clickedGmObj != null)
 			{
 				clickedGmObj.SendMessage("OnMouseMode",-1,SendMessageOptions.DontRequireReceiver);//mouse deselected
 				InteractionMode = -1;
+				print ("bbb~~~~~~~~~~~~~~~~~~~~");
 			}
 		}
 		/*
